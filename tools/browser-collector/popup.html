@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>浏览器采集器</title>
+<style>
+  :root{--bg:#0f1216;--panel:#171c22;--line:#252c35;--text:#e8edf3;--dim:#8d99a6;--ok:#35c07a;--warn:#e0a83a;--bad:#e5574a}
+  *{box-sizing:border-box}
+  body{margin:0;width:320px;background:var(--bg);color:var(--text);font:13px/1.55 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  .hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--bad);flex:none}
+  .dot.on{background:var(--ok);box-shadow:0 0 0 3px rgba(53,192,122,.15)}
+  .hd b{font-size:13px;font-weight:600}
+  .hd span{margin-left:auto;color:var(--dim);font-size:11px}
+  .bd{padding:12px 14px}
+  .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:0}
+  .row i{font-style:normal;color:var(--dim)}
+  .kpi{display:flex;gap:8px;margin:10px 0 4px}
+  .kpi div{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+  .kpi b{display:block;font-size:16px}
+  .kpi span{font-size:11px;color:var(--dim)}
+  .tip{margin-top:10px;padding:8px 10px;background:rgba(224,168,58,.08);border:1px solid rgba(224,168,58,.3);border-radius:8px;color:#e8c887;font-size:11.5px;line-height:1.6}
+  .tip.ok{background:rgba(53,192,122,.08);border-color:rgba(53,192,122,.3);color:#8fe0b6}
+  button{width:100%;margin-top:10px;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;font-size:12.5px}
+  button:hover{border-color:#3a4451}
+</style>
+</head>
+<body>
+  <div class="hd">
+    <span class="dot" id="dot"></span>
+    <b>浏览器采集器</b>
+    <span id="ver">v1.0.0</span>
+  </div>
+  <div class="bd">
+    <div class="row"><i>本机桥</i><b id="bridge">检测中…</b></div>
+    <div class="row"><i>云端配对</i><b id="paired">—</b></div>
+    <div class="row"><i>最近任务</i><b id="job">—</b></div>
+    <div class="kpi">
+      <div><b id="done">0</b><span>已完成</span></div>
+      <div><b id="failed">0</b><span>失败</span></div>
+      <div><b id="got">0</b><span>上次条数</span></div>
+    </div>
+    <div class="tip" id="tip">等待连接…</div>
+    <button id="wake">立即检查任务</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

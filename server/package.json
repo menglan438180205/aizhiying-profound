@@ -1,0 +1,22 @@
+{
+  "name": "aizhiying-bff",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI智盈 · 服务端层（BFF）+ FFmpeg 渲染 Worker。零依赖，仅需 Node 18+ 与 FFmpeg。",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test/api.test.js"
+  },
+  "dependencies": {},
+  "keywords": [
+    "bff",
+    "ffmpeg",
+    "render-worker",
+    "video"
+  ],
+  "license": "UNLICENSED"
+}

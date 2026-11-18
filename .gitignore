@@ -1,0 +1,83 @@
+# ---- 运行时数据：绝对不要提交 ----
+# 根目录 .data/ 是真实运行数据（业务库 + 素材 + 成片，体积数百 MB），
+# 之前只忽略了 server/.data/，根目录这条一旦 git init 就会把整个数据目录拖进版本库。
+.data/
+server/.data/
+server/.data-*/
+.build/.shotgeodata/
+.build/.shotcolsdata/
+.build/.data/
+
+# ---- 密钥 ----
+.env
+.env.*
+!.env.example
+# 生产模板要入库（它是模板，不含真实值），但本地真实配置绝不入库
+!.env.local.example
+*.pem
+*.key
+nginx/certs/
+
+# ---- 构建中间产物 ----
+.build/__pycache__/
+.build/*.pyc
+.build/qa_*.html
+.build/snap_*.html
+.build/index.before-*.html
+.build/*.log
+
+# ---- 产物（体积大，可由脚本再生成）----
+.build/*.png
+
+# ---- 操作系统 / 编辑器 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ---- 依赖（本项目零依赖，出现即说明有人误装）----
+node_modules/
+
+# ---- 清理工具临时目录 ----
+_cleanup_backup/
+
+# ---- 本机 Python 缓存 ----
+__pycache__/
+*.pyc
+
+# ---- 部署备份 / 回收站（时间戳副本，git 本身就是回退手段）----
+*.bak-*
+*.bak
+*.backup-*
+*.migrated-*
+_trash_backup/
+
+# ---- 日志与临时件 ----
+*.log
+logs/
+*.tmp
+
+# ---- WorkBuddy 会话数据（含聊天记录与预览快照）----
+.workbuddy/
+
+# ---- 本机 QA/浏览器画像等中间产物（含 chrome profile，体积大且可再生）----
+.build/
+
+# ---- 本机桥运行数据：登录态、浏览器资料、任务收件箱、配对令牌 ----
+tools/mediacrawler-bridge/browser_data/
+tools/mediacrawler-bridge/data/
+tools/mediacrawler-bridge/inbox/
+tools/mediacrawler-bridge/bridge-config.json
+
+# ---- 含真实邀请码的交付截图（不放进代码仓库）----
+docs/invite-code-settings.png
+
+# ---- 本地录屏 / 成片 / 压缩包，避免误提交大文件 ----
+*.mp4
+*.mov
+*.zip
+*.7z
+
+# ---- 浏览器扩展打包产物（可由源目录重新打包）----
+*.crx

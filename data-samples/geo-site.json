@@ -1,0 +1,42 @@
+{
+  "_sample": true,
+  "_entity": "geo-site",
+  "_note": "GEO直通车 · AI秒搭建站 的建站任务结构样例。生产环境用于对齐字段：一次建站任务 → 一套页面产物 + 一份 GEO 体检结果。",
+  "fields": {
+    "id": "string | 建站任务 ID",
+    "brand": "string | 品牌 / 企业名称",
+    "industry": "string | 行业键：agency / saas / local / mfg / edu / health / home / general",
+    "domain": "string | 站点域名（不含协议）",
+    "city": "string | 所在城市，写入 NAP 与 LocalBusiness",
+    "phone": "string | 联系电话，写入 Organization.contactPoint",
+    "keywords": "string[] | 核心关键词，决定 H1 / FAQ / llms.txt 主题",
+    "engines": "string[] | 建站后自动接入监测的 AI 引擎",
+    "pages": "number | 生成页面数（标准模板 6 页）",
+    "files": "string[] | 产物文件清单，含 llms.txt / robots.txt / sitemap.xml",
+    "score": "number | GEO 体检得分（0–100），五维各 20 分",
+    "dims": "object | 五维得分：crawl / struct / cite / trust / cover",
+    "status": "draft | built | published",
+    "createdAt": "string | ISO 8601 创建时间",
+    "publishedAt": "string | ISO 8601 发布时间（未发布为 null）"
+  },
+  "example": {
+    "id": "gs_sample_0001",
+    "brand": "示例品牌",
+    "industry": "agency",
+    "domain": "www.example-brand.com",
+    "city": "杭州",
+    "phone": "400-000-0000",
+    "keywords": ["示例主词 哪家好", "示例长尾词 推荐"],
+    "engines": ["doubao", "yuanbao"],
+    "pages": 6,
+    "files": [
+      "index.html", "services.html", "cases.html", "faq.html", "about.html", "contact.html",
+      "assets/style.css", "llms.txt", "robots.txt", "sitemap.xml"
+    ],
+    "score": 92,
+    "dims": { "crawl": 20, "struct": 20, "cite": 18, "trust": 18, "cover": 16 },
+    "status": "built",
+    "createdAt": "2026-10-17T09:30:00.000Z",
+    "publishedAt": null
+  }
+}

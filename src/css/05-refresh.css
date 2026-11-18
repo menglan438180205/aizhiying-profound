@@ -1,0 +1,291 @@
+/* ============================================================
+   05 · 布局与视觉整理层（2026-11 重构）
+   ------------------------------------------------------------
+   背景：base 样式累积了四代迭代（141KB），同一个视觉目标存在
+   多套写法；本层只做「收敛」不做「重画」：
+     1. 统一间距 / 圆角 / 阴影 / 字号阶梯（令牌化）
+     2. 收紧信息密度：一屏只保留一层摘要
+     3. GEO 子导航由「二级竖栏」改为「横向标签页」，消除双导航
+     4. 表格、按钮、空状态、徽标统一形态
+   加载顺序在 01–04 之后，等宽选择器下自然覆盖；本层可整体删除回滚。
+   ============================================================ */
+
+:root{
+  /* 间距阶梯：4 的倍数，替代散落的 13/17/19px 魔法值 */
+  --sp-1:4px;  --sp-2:8px;  --sp-3:12px; --sp-4:16px;
+  --sp-5:20px; --sp-6:24px; --sp-7:32px; --sp-8:40px;
+
+  --radius-sm:10px; --radius:14px; --radius-lg:20px; --radius-pill:999px;
+
+  --line:#ECECF4;
+  --line-strong:#DFDFEC;
+  --surface:#FFFFFF;
+  --surface-2:#F8F8FD;
+  --ink:#141328;
+  --ink-2:#5B5A72;
+  --ink-3:#8E8DA5;
+
+  --brand:#5B4FF0;
+  --brand-2:#8B5CF6;
+  --brand-soft:#EFECFE;
+
+  --shadow-1:0 1px 2px rgba(22,21,40,.04), 0 2px 8px -6px rgba(22,21,40,.10);
+  --shadow-2:0 4px 12px -8px rgba(22,21,40,.16), 0 18px 40px -28px rgba(76,63,228,.35);
+  --shadow-3:0 8px 28px -18px rgba(22,21,40,.28), 0 32px 64px -40px rgba(76,63,228,.45);
+
+  --topbar-h:70px;
+  --sidebar-w:236px;
+}
+
+/* ------------------------------------------------------------
+   1. 骨架：侧栏 / 顶栏 / 内容区
+   ------------------------------------------------------------ */
+body{
+  background:
+    radial-gradient(1100px 420px at 12% -8%, rgba(91,79,240,.10), transparent 60%),
+    radial-gradient(900px 380px at 92% -6%, rgba(139,92,246,.10), transparent 62%),
+    #F7F8FD;
+  background-attachment:fixed;
+}
+
+.sidebar{
+  width:var(--sidebar-w);
+  padding:18px 14px 14px;
+  gap:0;
+}
+
+.sidebar .brand{ padding:4px 8px 18px; gap:11px; }
+.sidebar .brand-txt strong{ font-size:15px; letter-spacing:.2px; }
+.sidebar .brand-txt span{ font-size:10.5px; color:rgba(255,255,255,.55); }
+
+.nav{ gap:2px; }
+.nav-group{ margin-bottom:14px; }
+.nav-label{
+  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(255,255,255,.38); padding:0 10px 6px; font-weight:600;
+}
+.nav-item{
+  height:38px; padding:0 10px; border-radius:9px;
+  font-size:13px; font-weight:500; color:rgba(255,255,255,.72);
+  gap:10px; transition:background .15s ease, color .15s ease;
+}
+.nav-item .icon{ width:16px; height:16px; opacity:.75; }
+.nav-item:hover{ background:rgba(255,255,255,.06); color:#fff; }
+.nav-item.active{
+  background:linear-gradient(90deg, rgba(108,92,240,.92), rgba(76,63,228,.78));
+  color:#fff; box-shadow:0 6px 16px -10px rgba(76,63,228,.9);
+}
+.nav-item.active .icon{ opacity:1; }
+.nav-item .badge{
+  margin-left:auto; min-width:20px; height:18px; padding:0 6px;
+  border-radius:var(--radius-pill); background:rgba(255,255,255,.16);
+  font-size:10.5px; font-weight:600; display:grid; place-items:center;
+}
+.nav-item .badge[hidden]{ display:none; }
+
+.sidebar-foot{ padding-top:10px; }
+.plan-card{
+  border-radius:var(--radius); padding:12px 13px;
+  background:linear-gradient(160deg, rgba(108,92,240,.22), rgba(76,63,228,.10));
+  border:1px solid rgba(255,255,255,.10);
+}
+.plan-card b{ font-size:12.5px; }
+.plan-card p{ font-size:11px; color:rgba(255,255,255,.55); margin:3px 0 9px; }
+.plan-card button{ height:30px; font-size:12px; border-radius:8px; }
+
+/* 布局由 base 的 flex 承担（sidebar flex:none + main flex:1），
+   这里不能再给 main 加 margin-left，否则内容整体右移一个侧栏宽度。 */
+.main{ margin-left:0; }
+
+.topbar{
+  height:var(--topbar-h); padding:0 var(--sp-6);
+  background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:30;
+}
+.topbar{ justify-content:flex-start; }
+.topbar .crumb{
+  min-width:0; flex:1 1 auto; margin:0; text-align:left;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+}
+.topbar .crumb h1{ font-size:15.5px; font-weight:650; letter-spacing:.1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.topbar .crumb span{ font-size:11.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.topbar .search{ max-width:320px; flex:0 1 320px; height:36px; border-radius:10px; background:var(--surface-2); }
+.topbar .avatar{ width:32px; height:32px; font-size:12.5px; }
+
+.content{
+  padding:28px 32px 104px;   /* 底部留白，避开右下角 QA 浮层 */
+  max-width:1560px;
+}
+
+.view{ animation:none; }
+
+/* 演示条：从「抢占视线」降为提示条 */
+.demo-bar{
+  margin:0 0 var(--sp-4); padding:8px 12px;
+  border-radius:10px; font-size:12px;
+  background:#FFF8EC; border:1px solid #F6E3BE; color:#8A5A00;
+}   /* 与顶栏副标题、产品线入口重复 */
+
+.line-strip{
+  display:grid; grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:var(--sp-3); margin-bottom:var(--sp-5);
+}
+.ls-item{
+  display:flex; align-items:center; gap:var(--sp-3);
+  padding:18px 20px; border-radius:var(--radius-lg);
+  background:var(--surface); border:1px solid var(--line);
+  box-shadow:var(--shadow-1); cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.ls-item:hover{ transform:translateY(-2px); box-shadow:var(--shadow-2); border-color:rgba(91,79,240,.22); }
+.ls-ico{ width:40px; height:40px; border-radius:12px; display:grid; place-items:center; flex:none; }
+.ls-main{ min-width:0; }
+.ls-main b{ font-size:14.5px; display:block; letter-spacing:.1px; }
+.ls-main span{ font-size:12px; color:var(--ink-3); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }                       /* 假数字一律不显示，真实计数见 KPI */
+.ls-go{ margin-left:auto; color:var(--ink-3); display:grid; place-items:center; }
+.ls-go .icon{ width:16px; height:16px; }
+
+.grid.g4{ gap:var(--sp-3); margin-bottom:var(--sp-4) !important; }
+
+.kpi{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:22px 22px 20px;
+  box-shadow:var(--shadow-1);
+}
+.kpi .k-top{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.kpi .k-top > div:first-child{ width:34px !important; height:34px !important; border-radius:11px !important; }
+.kpi .k-label{ font-size:12.5px; color:var(--ink-3); font-weight:500; }
+.kpi .k-val{
+  font-size:34px; font-weight:750; letter-spacing:-1px; line-height:1.1;
+  font-variant-numeric:tabular-nums; color:var(--ink);
+}
+.kpi .k-val .unit{ font-size:12.5px; font-weight:500; color:var(--ink-3); margin-left:4px; }
+.kpi .k-foot{ margin-top:9px; font-size:11px; color:var(--ink-3); display:flex; align-items:center; gap:6px; }
+.kpi .k-foot .trend{ font-weight:600; }
+
+.card{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius-lg); box-shadow:var(--shadow-1);
+}
+.card-head{ padding:18px 22px; border-bottom:1px solid var(--line); min-height:58px; }
+.card-head h3{ font-size:14.5px; font-weight:680; letter-spacing:-.1px; }
+.card-head .sub{ font-size:11px; color:var(--ink-3); }
+.card-body{ padding:20px 22px; }
+
+/* ------------------------------------------------------------
+   3. GEO：二级竖栏 → 横向标签页
+   ------------------------------------------------------------ */
+.g3{ display:block; }
+.g3-nav{
+  position:static; width:auto; height:auto;
+  display:block; border:none; background:transparent;
+  padding:0; margin:0 0 var(--sp-4);
+}
+.g3-nav-hd,
+.g3-nav-ft{ display:none; }
+.g3-nav-list{
+  display:flex; flex-direction:row; flex-wrap:nowrap; align-items:center;
+  gap:6px; overflow-x:auto; padding:5px;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--shadow-1);
+  scrollbar-width:none;
+}
+.g3-nav-list::-webkit-scrollbar{ display:none; }
+.g3-navi{
+  display:inline-flex; align-items:center; gap:7px;
+  width:auto; flex:0 0 auto; height:34px; padding:0 12px; border-radius:9px;
+  background:transparent; border:1px solid transparent;
+  font-size:12.5px; font-weight:500; color:var(--ink-2);
+  white-space:nowrap; cursor:pointer; transition:all .15s ease;
+}
+.g3-navi i{
+  width:20px; height:20px; border-radius:6px; display:grid; place-items:center;
+  background:#F1F1F8 !important; color:var(--ink-2); flex:none;
+}
+.g3-navi i .icon{ width:12px; height:12px; }
+.g3-navi:hover{ background:var(--surface-2); color:var(--ink); }
+.g3-navi.active{
+  background:var(--brand-soft); color:var(--brand); font-weight:600;
+  border-color:rgba(76,63,228,.14);
+}
+.g3-navi.active i{ background:var(--brand) !important; color:#fff; }
+.g3-navi .n{ margin-left:2px; }
+
+.g3-main{ margin:0; }
+.g3-bar{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--sp-4); padding:0 2px var(--sp-3); border-bottom:none;
+}
+.g3-bar-t h2{ font-size:17px; font-weight:680; letter-spacing:-.2px; }
+.g3-bar-t span{ font-size:11.5px; color:var(--ink-3); }
+.g3-body{ padding:0; }
+
+/* ------------------------------------------------------------
+   4. 通用组件：按钮 / 表格 / 标签 / 空状态
+   ------------------------------------------------------------ */
+.btn{
+  height:40px; padding:0 18px; border-radius:11px;
+  font-size:13px; font-weight:600; gap:7px;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
+  box-shadow:none; transition:all .15s ease;
+}
+.btn:hover{ border-color:var(--line-strong); background:var(--surface-2); }
+.btn.primary{
+  background:linear-gradient(135deg, #6C5CF0, var(--brand) 55%, #7C4DF0);
+  border-color:transparent; color:#fff;
+  box-shadow:0 6px 14px -10px rgba(76,63,228,.9);
+}
+.btn.primary:hover{ filter:brightness(1.04); }
+.btn.sm{ height:32px; padding:0 13px; font-size:12.5px; border-radius:9px; }
+.btn.lg{ height:46px; font-size:14px; border-radius:13px; }
+.btn.ghost{ background:transparent; }
+
+table{ font-size:12.5px; }
+thead th{
+  font-size:11px; font-weight:600; letter-spacing:.06em; color:var(--ink-3);
+  text-transform:uppercase; padding:10px 14px; background:var(--surface-2);
+  border-bottom:1px solid var(--line); position:sticky; top:0; z-index:1;
+}
+tbody td{ padding:11px 14px; border-bottom:1px solid var(--line); }
+tbody tr:hover td{ background:#FBFBFE; }
+
+.badge{ border-radius:var(--radius-pill); font-size:10.5px; padding:1px 7px; }
+
+/* 空状态：统一虚线容器，避免一屏多处「暂无数据」散落 */
+.empty{
+  border:1px dashed var(--line-strong); border-radius:var(--radius);
+  background:var(--surface-2); padding:28px 20px;
+  text-align:center; color:var(--ink-3); font-size:12.5px;
+}
+
+/* 看板右栏：转化环 + 数据口径 */
+.conv-wrap{
+  margin-top:16px; padding-top:16px; border-top:1px solid var(--line);
+  display:flex; align-items:center; gap:14px;
+}
+.dq-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px 12px; }
+.dq-grid b{ display:block; font-size:20px; font-weight:700; letter-spacing:-.4px; font-variant-numeric:tabular-nums; }
+.dq-grid span{ font-size:11.5px; color:var(--ink-3); }
+.dq-note{ margin-top:14px; padding-top:12px; border-top:1px solid var(--line); font-size:11px; color:var(--ink-3); line-height:1.6; }
+
+/* QA 测试助手：缩小并让位，不再压住内容卡片 */
+.qa-fab{ width:40px !important; height:40px !important; right:20px !important; bottom:20px !important; opacity:.72; }
+.qa-fab:hover{ opacity:1; }
+
+/* ------------------------------------------------------------
+   5. 响应式
+   ------------------------------------------------------------ */
+@media (max-width:1180px){
+  .line-strip{ grid-template-columns:1fr 1fr; }
+  .grid.g4{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width:860px){
+  .content{ padding:14px 14px 88px; }
+  .topbar{ padding:0 14px; }
+  .line-strip{ grid-template-columns:1fr; }
+  .grid.g4{ grid-template-columns:1fr 1fr; }
+  .g3-nav-list{ padding:4px; }
+  .g3-bar{ flex-direction:column; align-items:flex-start; gap:8px; }
+}

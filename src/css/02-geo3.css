@@ -1,0 +1,179 @@
+
+/* =========================================================
+   GEO 优化引擎 · 11 模块控制台（g3- 前缀，仅 #v-geo 内使用）
+   视觉：轻快靓丽 —— 白卡片 + 淡蓝紫底 + 多彩模块图标
+   ========================================================= */
+.g3{display:grid;grid-template-columns:198px minmax(0,1fr);gap:14px;align-items:start}
+@media(max-width:980px){.g3{grid-template-columns:1fr}.g3-nav{position:static!important}}
+
+/* ---------- 模块导航 ---------- */
+.g3-nav{position:sticky;top:0;background:#fff;border:1px solid var(--border);border-radius:16px;
+  padding:10px;box-shadow:var(--shadow-sm)}
+.g3-nav-hd{padding:6px 8px 10px;border-bottom:1px solid var(--border-2);margin-bottom:8px}
+.g3-nav-hd b{display:block;font-size:13px;letter-spacing:.02em}
+.g3-nav-hd span{font-size:10.5px;color:var(--text-3)}
+.g3-nav-list{display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 210px);overflow-y:auto}
+@media(max-width:980px){.g3-nav-list{flex-direction:row;max-height:none;overflow-x:auto;padding-bottom:2px}}
+.g3-navi{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:10px;border:0;background:transparent;
+  cursor:pointer;font-family:inherit;font-size:12.5px;color:var(--text-2);text-align:left;width:100%;
+  transition:background .15s,color .15s;white-space:nowrap}
+@media(max-width:980px){.g3-navi{width:auto;flex:none}}
+.g3-navi:hover{background:var(--panel-2);color:var(--text)}
+.g3-navi.active{background:linear-gradient(135deg,#EEF0FF,#F5EEFF);color:var(--primary);font-weight:600;
+  box-shadow:inset 0 0 0 1px rgba(122,111,240,.18)}
+.g3-navi i{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;flex:none;color:#fff}
+.g3-navi i svg{width:13px;height:13px;stroke-width:2}
+.g3-navi .n{margin-left:auto;font-size:10px;font-weight:800;padding:0 5px;border-radius:999px;
+  background:var(--red-soft);color:var(--red)}
+.g3-navi.active .n{background:#fff}
+.g3-nav-ft{margin-top:8px;padding:8px;border-top:1px solid var(--border-2);font-size:10.5px;color:var(--text-3);line-height:1.6}
+
+/* ---------- 内容区 ---------- */
+.g3-main{min-width:0}
+.g3-bar{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.g3-bar-t h2{font-size:17px;font-weight:800;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
+.g3-bar-t span{font-size:11.5px;color:var(--text-3);display:block;margin-top:3px;line-height:1.5}
+.g3-bar-r{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.g3-body{display:flex;flex-direction:column;gap:12px}
+
+/* KPI */
+.g3-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:10px}
+.g3-kpi{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px 13px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm)}
+.g3-kpi::after{content:"";position:absolute;right:-16px;top:-16px;width:64px;height:64px;border-radius:50%;opacity:.12;background:var(--k,#4A46E8)}
+.g3-kpi .lb{font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:5px}
+.g3-kpi .vl{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-top:5px;font-variant-numeric:tabular-nums}
+.g3-kpi .vl small{font-size:12px;font-weight:600;color:var(--text-3);margin-left:2px}
+.g3-kpi .ft{font-size:10.5px;color:var(--text-3);margin-top:5px;display:flex;gap:6px;align-items:center}
+.g3-up{color:#e5484d;font-weight:700}.g3-down{color:#12a150;font-weight:700}
+
+/* 卡片 */
+.g3-card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden}
+.g3-card-hd{display:flex;align-items:center;gap:9px;padding:12px 15px;border-bottom:1px solid var(--border-2);flex-wrap:wrap}
+.g3-card-hd h3{font-size:13.5px;font-weight:700}
+.g3-card-hd .sub{font-size:11px;color:var(--text-3)}
+.g3-card-hd .r{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.g3-card-bd{padding:14px 15px}
+.g3-card-bd.tight{padding:9px 12px}
+.g3-grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;align-items:start}
+.g3-grid2.even{grid-template-columns:1fr 1fr}
+@media(max-width:1080px){.g3-grid2,.g3-grid2.even{grid-template-columns:1fr}}
+
+/* 通用小件 */
+.g3-hint{font-size:11px;color:var(--text-3);line-height:1.6}
+.g3-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:999px;
+  background:var(--panel-3);color:var(--text-2);white-space:nowrap}
+.g3-tag.ok{background:var(--green-soft);color:var(--green)}
+.g3-tag.warn{background:var(--amber-soft);color:var(--amber)}
+.g3-tag.bad{background:var(--red-soft);color:var(--red)}
+.g3-tag.info{background:var(--primary-soft);color:var(--primary)}
+.g3-tag.gray{background:var(--panel-3);color:var(--text-3)}
+.g3-btn{display:inline-flex;align-items:center;gap:5px;height:29px;padding:0 11px;border-radius:9px;border:1px solid var(--border);
+  background:#fff;color:var(--text-2);font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;white-space:nowrap}
+.g3-btn:hover{background:var(--panel-2);color:var(--text);border-color:#d8dcf0}
+.g3-btn.p{background:linear-gradient(135deg,#4A46E8,#7C3AED);border-color:transparent;color:#fff;font-weight:600;
+  box-shadow:0 5px 14px -6px rgba(90,80,240,.55)}
+.g3-btn.p:hover{filter:brightness(1.05);color:#fff}
+.g3-btn.sm{height:25px;padding:0 8px;font-size:11px;border-radius:7px}
+.g3-btn[disabled]{opacity:.5;cursor:not-allowed}
+.g3-btn svg{width:13px;height:13px}
+.g3-fld{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--text-3)}
+.g3-fld input,.g3-fld select,.g3-fld textarea{border:1px solid var(--border);border-radius:9px;padding:7px 10px;
+  font-size:12.5px;font-family:inherit;color:var(--text);background:#fff;outline:0;transition:.15s}
+.g3-fld input:focus,.g3-fld select:focus,.g3-fld textarea:focus{border-color:var(--primary-2);box-shadow:0 0 0 3px var(--primary-soft)}
+.g3-fld textarea{resize:vertical;min-height:64px;line-height:1.6}
+.g3-form{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3-form .full{grid-column:1/-1}
+@media(max-width:720px){.g3-form{grid-template-columns:1fr}}
+.g3-rows{display:flex;flex-direction:column;gap:1px}
+.g3-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--border-2);font-size:12.5px}
+.g3-row:last-child{border-bottom:0}
+.g3-row .m{flex:1;min-width:0}
+.g3-row .m b{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g3-row .m span{font-size:10.5px;color:var(--text-3);display:block;margin-top:2px}
+.g3-empty{padding:26px 14px;text-align:center;color:var(--text-3);font-size:12px;line-height:1.8}
+.g3-empty b{display:block;color:var(--text-2);font-size:13px;margin-bottom:4px}
+.g3-prog{height:6px;border-radius:999px;background:var(--panel-3);overflow:hidden}
+.g3-prog i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4A46E8,#7C3AED)}
+.g3-zonebar{display:flex;height:7px;border-radius:999px;overflow:hidden;background:var(--panel-3);margin-top:6px}
+.g3-zonebar i{height:100%}
+
+/* 表格 */
+.g3-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.g3-tbl th{text-align:left;font-size:10.5px;color:var(--text-3);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border-2);
+  white-space:nowrap;background:var(--panel-2)}
+.g3-tbl td{padding:7px 8px;border-bottom:1px solid var(--border-2);vertical-align:middle}
+.g3-tbl tr:last-child td{border-bottom:0}
+.g3-tbl tbody tr:hover{background:#FAFBFF}
+.g3-tbl .num{font-variant-numeric:tabular-nums;text-align:right}
+.g3-tbl .w{color:var(--text-2);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g3-scroll{overflow:auto;max-height:420px}
+
+/* 图表 */
+.g3-chart{width:100%;height:auto;display:block}
+.g3-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10.5px;color:var(--text-3);margin-top:6px}
+.g3-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:4px}
+.g3-donut{width:126px;height:126px;border-radius:50%;position:relative;flex:none}
+.g3-donut::after{content:"";position:absolute;inset:16px;background:#fff;border-radius:50%}
+.g3-donut span{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:19px;font-weight:800}
+.g3-donut-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+
+/* 评分环 */
+.g3-score{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.g3-score .ring{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;flex:none;position:relative}
+.g3-score .ring::after{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}
+.g3-score .ring b{position:relative;z-index:2;font-size:22px;font-weight:800}
+.g3-score .ring b small{font-size:11px;color:var(--text-3);font-weight:600}
+
+/* 清单 */
+.g3-check{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--border-2);font-size:12px}
+.g3-check:last-child{border-bottom:0}
+.g3-check .ic{width:16px;height:16px;border-radius:50%;flex:none;display:grid;place-items:center;margin-top:1px;font-size:10px;font-weight:800;color:#fff}
+.g3-check.ok .ic{background:#12a150}
+.g3-check.no .ic{background:#e5484d}
+.g3-check .tx{flex:1;min-width:0;line-height:1.5}
+.g3-check .tx em{font-style:normal;color:var(--text-3);font-size:11px;display:block;margin-top:1px}
+.g3-check .wt{font-size:10.5px;color:var(--text-3);flex:none}
+
+/* 资产编辑 */
+.g3-split{display:grid;grid-template-columns:280px minmax(0,1fr);gap:12px;align-items:start}
+@media(max-width:1080px){.g3-split{grid-template-columns:1fr}}
+.g3-list{display:flex;flex-direction:column;gap:6px;max-height:560px;overflow:auto;padding-right:2px}
+.g3-item{border:1px solid var(--border-2);border-radius:11px;padding:9px 10px;background:#fff;cursor:pointer;transition:.15s}
+.g3-item:hover{border-color:#d9dcf3;background:#FAFBFF}
+.g3-item.on{border-color:rgba(122,111,240,.5);background:linear-gradient(135deg,#F7F5FF,#FDF8FF);box-shadow:0 0 0 3px rgba(122,111,240,.08)}
+.g3-item .t{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g3-item .s{font-size:10.5px;color:var(--text-3);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.g3-paper{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:#fff;max-height:520px;overflow:auto}
+.g3-paper h1{font-size:17px;font-weight:800;margin-bottom:10px;line-height:1.4}
+.g3-paper p{font-size:13px;line-height:1.85;color:var(--text-2);margin-bottom:10px;white-space:pre-wrap}
+.g3-mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.75;white-space:pre-wrap;
+  background:#161528;color:#E6E5F2;border-radius:10px;padding:12px 14px;max-height:360px;overflow:auto}
+.g3-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border-2);margin-bottom:10px}
+.g3-tab{border:0;background:transparent;font-family:inherit;font-size:12px;color:var(--text-3);padding:6px 10px;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.g3-tab.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+
+/* 渠道色块 */
+.g3-chan{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.g3-chan-g{border:1px solid var(--border-2);border-radius:12px;padding:10px 11px;background:var(--panel-2)}
+.g3-chan-g h4{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.g3-chan-g h4 i{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;color:#fff}
+.g3-chan-g h4 i svg{width:11px;height:11px}
+.g3-chan-l{display:flex;flex-direction:column;gap:4px}
+.g3-chan-i{display:flex;align-items:center;gap:6px;font-size:11.5px;background:#fff;border:1px solid var(--border-2);
+  border-radius:8px;padding:4px 7px}
+.g3-chan-i .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 供应商 / 报告卡 */
+.g3-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.g3-mini{border:1px solid var(--border);border-radius:13px;padding:12px 13px;background:#fff;cursor:pointer;transition:.15s}
+.g3-mini:hover{border-color:#d9dcf3;transform:translateY(-1px);box-shadow:var(--shadow)}
+.g3-mini.on{border-color:rgba(122,111,240,.55);box-shadow:0 0 0 3px rgba(122,111,240,.1)}
+.g3-mini b{font-size:12.5px;display:block}
+.g3-mini span{font-size:10.5px;color:var(--text-3);display:block;margin-top:4px;line-height:1.55}
+
+/* 骨架 */
+.g3-skel{height:90px;border-radius:14px;background:linear-gradient(90deg,#F2F4FB 25%,#F8F9FE 50%,#F2F4FB 75%);
+  background-size:200% 100%;animation:g3sk 1.2s infinite}
+@keyframes g3sk{0%{background-position:200% 0}100%{background-position:-200% 0}}

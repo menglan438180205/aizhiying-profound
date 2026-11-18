@@ -1,0 +1,28 @@
+{
+  "_sample": true,
+  "_entity": "collect-task",
+  "_note": "评论区获客调度任务结构样例。一条任务 = 一个关键词 × 一个平台 × 一个采集范围。",
+  "fields": {
+    "id": "string | 任务 ID",
+    "keyword": "string | 采集关键词",
+    "platform": "douyin | kuaishou | xhs | sph",
+    "every": "string | 调度周期，如 1h / 6h / 24h",
+    "cron": "string | 可选，标准 cron 表达式（与 every 二选一）",
+    "limit": "number | 单轮最多采集条数",
+    "channel": "auto | official | crawler | vendor",
+    "scope": "own | keyword | auto",
+    "enabled": "boolean | 是否启用",
+    "tags": "string[] | 自定义标签"
+  },
+  "example": {
+    "id": "ctask_sample_0001",
+    "keyword": "示例关键词",
+    "platform": "douyin",
+    "every": "1h",
+    "limit": 20,
+    "channel": "auto",
+    "scope": "keyword",
+    "enabled": true,
+    "tags": ["示例"]
+  }
+}

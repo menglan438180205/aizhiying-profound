@@ -1,0 +1,25 @@
+{
+  "_sample": true,
+  "_entity": "order",
+  "_note": "订单与订阅结构样例。生产环境由支付回调写入，前端不可直接改状态。",
+  "fields": {
+    "order_no": "string | 订单号（服务端生成）",
+    "plan_code": "string | 套餐编码",
+    "amount": "number | 订单金额（元）",
+    "status": "pending | paid | canceled | refunded",
+    "channel": "wechat | alipay | manual",
+    "created_at": "ISO8601 | 下单时间",
+    "paid_at": "ISO8601 | 支付时间",
+    "expires_at": "ISO8601 | 订阅到期时间"
+  },
+  "example": {
+    "order_no": "EX20260000000001",
+    "plan_code": "standard",
+    "amount": 12800,
+    "status": "pending",
+    "channel": "manual",
+    "created_at": "2026-01-01T09:00:00.000Z",
+    "paid_at": null,
+    "expires_at": null
+  }
+}

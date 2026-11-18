@@ -1,0 +1,23 @@
+{
+  "_sample": true,
+  "_entity": "plan",
+  "_note": "会员套餐结构样例。价格单位为元；period 决定有效期计算方式。",
+  "fields": {
+    "code": "string | 套餐编码（quarter / basic / standard / flagship）",
+    "name": "string | 套餐名称",
+    "price": "number | 价格（元）",
+    "period": "quarter | year",
+    "seats": "number | 可托管微信号数",
+    "highlight": "boolean | 是否推荐款",
+    "features": "string[] | 权益清单"
+  },
+  "example": {
+    "code": "standard",
+    "name": "标准版",
+    "price": 12800,
+    "period": "year",
+    "seats": 5,
+    "highlight": true,
+    "features": ["示例权益 A", "示例权益 B"]
+  }
+}

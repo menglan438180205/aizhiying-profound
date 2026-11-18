@@ -1,0 +1,31 @@
+{
+  "_sample": true,
+  "_entity": "lead",
+  "_note": "生产库线索表的标准结构样例。导入真实线索时按此字段对齐；示例值已脱敏。",
+  "fields": {
+    "id": "string | 线索唯一 ID（服务端生成）",
+    "nickname": "string | 客户昵称，建议「姓+身份+行业」",
+    "platform": "douyin | kuaishou | xhs | sph",
+    "keyword": "string | 命中关键词",
+    "comment": "string | 原始评论/私信内容（脱敏后入库）",
+    "intent_score": "number 0-100 | 意向分",
+    "stage": "new | sent | wechat | nego | deal | sleep",
+    "requirement": "string | 需求摘要",
+    "wechat_note": "string | 加微后备注",
+    "amount": "number | 预计/成交金额（元）",
+    "created_at": "ISO8601 | 入库时间"
+  },
+  "example": {
+    "id": "lead_sample_0001",
+    "nickname": "示例客户 · 连锁零售",
+    "platform": "douyin",
+    "keyword": "示例关键词",
+    "comment": "示例评论内容（真实项目请替换为脱敏后的原文）",
+    "intent_score": 80,
+    "stage": "new",
+    "requirement": "示例需求：月度代运营",
+    "wechat_note": null,
+    "amount": null,
+    "created_at": "2026-01-01T09:00:00.000Z"
+  }
+}

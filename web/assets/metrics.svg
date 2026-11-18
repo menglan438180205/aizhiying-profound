@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="640" height="420" role="img" aria-label="GEO 五指标采集与计算流程">
+  <defs>
+    <linearGradient id="gIndigo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4A46E8"/><stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="gSoft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFF"/><stop offset="1" stop-color="#F4F5FF"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#4A46E8" flood-opacity=".10"/>
+    </filter>
+    <style>
+      .t{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+      .h{font-size:13px;font-weight:700;fill:#0E1430}
+      .s{font-size:10.5px;fill:#6C7496}
+      .v{font-size:15px;font-weight:800;fill:#4A46E8}
+      .bar{fill:#EDEFFB}
+    </style>
+  </defs>
+
+  <rect width="640" height="420" rx="18" fill="url(#gSoft)"/>
+
+  <!-- 列 1：词包 -->
+  <g filter="url(#sh)">
+    <rect x="24" y="40" width="150" height="150" rx="14" fill="#fff" stroke="#EDEFFA"/>
+  </g>
+  <text class="t h" x="40" y="66">固定问句词包</text>
+  <text class="t s" x="40" y="84">30~500 条真实提问</text>
+  <g class="t s">
+    <rect x="40" y="96" width="118" height="18" rx="6" fill="#EEF0FF"/><text x="48" y="109" fill="#4A46E8">成交词 · 42</text>
+    <rect x="40" y="120" width="118" height="18" rx="6" fill="#F5EEFF"/><text x="48" y="133" fill="#7C3AED">地域词 · 68</text>
+    <rect x="40" y="144" width="118" height="18" rx="6" fill="#E9FBF3"/><text x="48" y="157" fill="#0E9F6E">长尾词 · 129</text>
+    <rect x="40" y="168" width="118" height="18" rx="6" fill="#FEF4E6"/><text x="48" y="181" fill="#B45309">竞品词 · 31</text>
+  </g>
+
+  <!-- 列 2：六模型 -->
+  <g filter="url(#sh)">
+    <rect x="198" y="40" width="150" height="150" rx="14" fill="#fff" stroke="#EDEFFA"/>
+  </g>
+  <text class="t h" x="214" y="66">6 个 AI 引擎</text>
+  <text class="t s" x="214" y="84">联网检索 · PC/移动</text>
+  <g class="t s">
+    <circle cx="222" cy="104" r="4" fill="#4A46E8"/><text x="232" y="108">豆包</text>
+    <circle cx="222" cy="124" r="4" fill="#7C3AED"/><text x="232" y="128">腾讯元宝</text>
+    <circle cx="222" cy="144" r="4" fill="#22C5EE"/><text x="232" y="148">文心一言</text>
+    <circle cx="300" cy="104" r="4" fill="#F59E0B"/><text x="310" y="108">通义</text>
+    <circle cx="300" cy="124" r="4" fill="#10B981"/><text x="310" y="128">Kimi</text>
+    <circle cx="300" cy="144" r="4" fill="#F472B6"/><text x="310" y="148">DeepSeek</text>
+  </g>
+
+  <!-- 箭头 1 -->
+  <path d="M180 115h14M194 115l-6-4M194 115l-6 4" stroke="#B9BDF0" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- 箭头 2 -->
+  <path d="M354 115h14M368 115l-6-4M368 115l-6 4" stroke="#B9BDF0" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- 列 3：快照 -->
+  <g filter="url(#sh)">
+    <rect x="372" y="40" width="244" height="150" rx="14" fill="#fff" stroke="#EDEFFA"/>
+  </g>
+  <text class="t h" x="388" y="66">问答快照库（原始证据）</text>
+  <text class="t s" x="388" y="84">问句 + 完整回答 + 引用链接</text>
+  <rect x="388" y="94" width="212" height="34" rx="8" fill="#F7F8FF" stroke="#EFF1FB"/>
+  <text class="t s" x="398" y="108">Q：杭州婚纱照哪家不踩坑？</text>
+  <text class="t s" x="398" y="121" fill="#0E9F6E">命中：品牌 · 第 1 位 · 情感正</text>
+  <rect x="388" y="134" width="212" height="34" rx="8" fill="#F7F8FF" stroke="#EFF1FB"/>
+  <text class="t s" x="398" y="148">引用：官网 / 分站 / 地方媒体</text>
+  <text class="t s" x="398" y="161" fill="#98A0BE">可回溯 · 可用于客户验收</text>
+
+  <!-- 向下箭头 -->
+  <path d="M494 196v26M494 226l-4-6M494 226l4-6" stroke="#B9BDF0" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- 底部：五指标 -->
+  <g filter="url(#sh)">
+    <rect x="24" y="236" width="592" height="152" rx="14" fill="#fff" stroke="#EDEFFA"/>
+  </g>
+  <text class="t h" x="40" y="262">五项核心指标（同一份样本，五个口径）</text>
+
+  <!-- 指标 1 -->
+  <text class="t s" x="40" y="288">品牌提及率</text>
+  <rect class="bar" x="40" y="294" width="120" height="7" rx="3.5"/><rect x="40" y="294" width="84" height="7" rx="3.5" fill="url(#gIndigo)"/>
+  <text class="t v" x="168" y="301" font-size="11">70%</text>
+
+  <!-- 指标 2 -->
+  <text class="t s" x="40" y="322">首推率</text>
+  <rect class="bar" x="40" y="328" width="120" height="7" rx="3.5"/><rect x="40" y="328" width="36" height="7" rx="3.5" fill="#7C3AED"/>
+  <text class="t v" x="168" y="335" font-size="11">30%</text>
+
+  <!-- 指标 3 -->
+  <text class="t s" x="40" y="356">TOP3 推荐率</text>
+  <rect class="bar" x="40" y="362" width="120" height="7" rx="3.5"/><rect x="40" y="362" width="60" height="7" rx="3.5" fill="#22C5EE"/>
+  <text class="t v" x="168" y="369" font-size="11">50%</text>
+
+  <!-- 右列指标 -->
+  <text class="t s" x="240" y="288">情感得分</text>
+  <rect class="bar" x="240" y="294" width="120" height="7" rx="3.5"/><rect x="240" y="294" width="96" height="7" rx="3.5" fill="#10B981"/>
+  <text class="t v" x="368" y="301" font-size="11" fill="#0E9F6E">80</text>
+
+  <text class="t s" x="240" y="322">竞品占比</text>
+  <rect class="bar" x="240" y="328" width="120" height="7" rx="3.5"/><rect x="240" y="328" width="48" height="7" rx="3.5" fill="#F59E0B"/>
+  <text class="t v" x="368" y="335" font-size="11" fill="#B45309">40%</text>
+
+  <!-- 时间序列表述 -->
+  <rect x="420" y="278" width="180" height="86" rx="10" fill="#F7F8FF" stroke="#EFF1FB"/>
+  <text class="t s" x="434" y="298">同词包 · 同模型 · 同周期</text>
+  <text class="t s" x="434" y="316">时序对比，而非单次抽样</text>
+  <text class="t s" x="434" y="334">每条指标可下钻到原始回答</text>
+  <text class="t s" x="434" y="352" fill="#4A46E8">→ 报告可交付、可核验</text>
+</svg>

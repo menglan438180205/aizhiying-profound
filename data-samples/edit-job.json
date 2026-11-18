@@ -1,0 +1,37 @@
+{
+  "_sample": true,
+  "_entity": "edit-job",
+  "_note": "AI智能剪辑渲染任务结构样例。生产提交任务时按此字段组装请求体。",
+  "fields": {
+    "id": "string | 任务 ID（服务端生成）",
+    "count": "number | 成片条数",
+    "ratio": "9:16 | 16:9 | 1:1",
+    "shotSeconds": "number | 单镜头时长（秒）",
+    "motion": "kenburns | none",
+    "transition": "fade | none",
+    "voice": "boolean | 是否生成配音",
+    "voiceText": "string | 配音文案",
+    "voiceRate": "number | 语速倍率",
+    "subtitle": "boolean | 是否烧录字幕",
+    "samples": "string[] | 内置示例素材 ID（免上传）",
+    "assets": "string[] | 已上传素材 ID",
+    "status": "queued | running | done | failed | canceled",
+    "outputs": "{ url, bytes }[]"
+  },
+  "example": {
+    "id": "job_sample_0001",
+    "count": 1,
+    "ratio": "9:16",
+    "shotSeconds": 3,
+    "motion": "kenburns",
+    "transition": "fade",
+    "voice": true,
+    "voiceText": "示例配音文案，替换为你的真实口播稿。",
+    "voiceRate": 1.1,
+    "subtitle": true,
+    "samples": ["sample-1"],
+    "assets": [],
+    "status": "queued",
+    "outputs": []
+  }
+}

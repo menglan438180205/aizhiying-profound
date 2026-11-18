@@ -1,0 +1,46 @@
+# robots.txt · AI 智盈 ProFound
+# 官网内容对搜索引擎与生成式 AI 爬虫开放；应用后台与接口不开放。
+
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /app/
+Disallow: /v1/
+Disallow: /site/
+Disallow: /geo-manual
+Disallow: /status
+
+# 生成式 AI 爬虫（显式放行，便于被引用）
+User-agent: GPTBot
+Allow: /
+Disallow: /app/
+Disallow: /v1/
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://aizhiying.online/sitemap.xml

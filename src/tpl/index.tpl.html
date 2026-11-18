@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ProFound · AI 全链路赋能企业数字化增长引擎</title>
+<!-- 图标内联为 data URI：此前没有 favicon，浏览器每次加载都打一个 /favicon.ico 404，
+     控制台常驻一条红字。内联后零额外请求、标签页有品牌色。 -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNkM1Q0YwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjN0M0REYwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0xMS4yIDIzLjVWOC44aDYuMWMzIDAgNSAxLjkgNSA0LjlzLTIgNC45LTUgNC45aC0zdjQuOXoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=">
+<!-- 安全：这里不再内嵌服务端令牌。页面是公开静态资源，令牌一旦写进来等于公开管理密钥。
+     进门方式改为「手机号 + 密码」换会话票（HMAC 签名、30 天有效、可吊销），见 server/auth.js。 -->
+<style><!--@bundle:css/01-base.css--></style>
+<!-- 2026-11-08：不再加载 WorkBuddy 云 SDK（assets/sdk.js 已下线）。
+     登录只有一条路：手机号 + 密码 → POST /v1/auth/login → 30 天会话票。
+     所有业务数据（线索/套餐/账单）都来自本服务，不再有第二条云端数据源。 -->
+</head>
+<body class="pre-auth">
+
+<!-- ========== SVG 图标精灵 ========== -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-comment" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-3.8-.9L3 21l1.9-5A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+  <symbol id="i-robot" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M12 8V4m-2 0h4"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="14" r="1.2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="m16 11 5-3v8l-5-3z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.4"/><path d="M22 20v-2a4 4 0 0 0-3-3.8M16.5 3.6a4 4 0 0 1 0 7.7"/></symbol>
+  <symbol id="i-setting" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.4-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3"/><path d="M12 3v4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="m23 6-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><circle cx="16.5" cy="14.5" r="1"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.3l3.3 2"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5V8z"/><path d="m3 8 9 5 9-5M12 13v8"/></symbol>
+  <symbol id="i-headset" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><path d="M20 16.5a2.5 2.5 0 0 1-2.5 2.5H16v-6h1.5A2.5 2.5 0 0 1 20 15.5zM4 16.5A2.5 2.5 0 0 0 6.5 19H8v-6H6.5A2.5 2.5 0 0 0 4 15.5z"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9.5 12 2 2 3.5-4"/></symbol>
+  <symbol id="i-warning" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3A5 5 0 0 0 13.4 3.4l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3A5 5 0 0 0 10.6 20.6l1.7-1.7"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2.5"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-smartphone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M22 3H2l8 9.5V19l4 2v-8.5L22 3z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3.5 20 12 6 20.5v-17z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 18h18M4 18 2.5 7.5l5 3.5L12 4l4.5 7 5-3.5L20 18H4z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3z"/></symbol>
+</svg>
+
+<div class="boot" id="boot">
+  <div class="boot-inner">
+    <svg class="boot-logo" viewBox="0 0 44 44" aria-hidden="true">
+      <defs><linearGradient id="bootGrad" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#4C3FE4"/><stop offset=".55" stop-color="#8B5CF6"/><stop offset="1" stop-color="#F5A524"/>
+      </linearGradient></defs>
+      <rect width="44" height="44" rx="13" fill="url(#bootGrad)"/>
+      <rect x="10.5" y="25.5" width="5.6" height="9" rx="2.8" fill="#fff" opacity=".5"/>
+      <rect x="19.2" y="19.5" width="5.6" height="15" rx="2.8" fill="#fff" opacity=".78"/>
+      <rect x="27.9" y="13" width="5.6" height="21.5" rx="2.8" fill="#fff"/>
+      <circle cx="30.7" cy="8.4" r="3.1" fill="#fff"/>
+    </svg>
+    <div>正在进入 ProFound…</div>
+  </div>
+</div>
+
+<div class="login" id="loginView">
+  <div class="login-left">
+    <div class="login-lb">
+      <svg viewBox="0 0 44 44" width="38" height="38" aria-hidden="true">
+        <rect width="44" height="44" rx="13" fill="#fff" opacity=".95"/>
+        <rect x="10.5" y="25.5" width="5.6" height="9" rx="2.8" fill="#4C3FE4" opacity=".45"/>
+        <rect x="19.2" y="19.5" width="5.6" height="15" rx="2.8" fill="#4C3FE4" opacity=".75"/>
+        <rect x="27.9" y="13" width="5.6" height="21.5" rx="2.8" fill="#4C3FE4"/>
+        <circle cx="30.7" cy="8.4" r="3.1" fill="#F5A524"/>
+      </svg>
+      <div><strong>ProFound</strong><span>AI 全链路企业增长引擎</span></div>
+    </div>
+
+    <h2>AI 全链路赋能企业<br>数字化增长引擎</h2>
+    <p>AI灵讯流量获客、GEO直通车、DeepWork智伴智能营销工作台，一站式闭环解决企业从品牌落地、流量挖掘到高效经营的全周期需求 —— 面向全行业。</p>
+
+    <ul class="login-feats">
+      <li><svg class="icon"><use href="#i-radar"/></svg><div><b>AI灵讯</b> · 评论区获客 / 私信触达 / 更多获客，全域流量一网打尽</div></li>
+      <li><svg class="icon"><use href="#i-globe"/></svg><div><b>GEO直通车</b> · 让豆包、元宝等 AI 搜索主动推荐你的品牌</div></li>
+      <li><svg class="icon"><use href="#i-scissors"/></svg><div><b>DeepWork智伴</b> · AI智能剪辑 + AI数字人，内容生产与分发 24 小时在线</div></li>
+      <li><svg class="icon"><use href="#i-robot"/></svg><div><b>经营支撑</b> · 5 位 AI 员工与客户管理 CRM，承接成片与直播带来的线索直到回款</div></li>
+    </ul>
+
+    <div class="login-stats">
+      <div><b>128</b><span>日均新增线索</span></div>
+      <div><b>84%</b><span>AI 自动应答率</span></div>
+      <div><b>3.2×</b><span>加微效率提升</span></div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <h3 id="authTitle">登录</h3>
+      <p class="login-sub" id="authSub">手机号 + 密码 · 账号只存在本服务器，不出网</p>
+
+      <div class="auth-tabs" id="authTabs">
+        <button class="on" id="authTabLogin" type="button">登录</button>
+        <button id="authTabRegister" type="button" style="display:none">注册</button>
+      </div>
+
+      <!-- 唯一入口：账号密码（走本服务器 /v1/auth/login，不依赖云端）。
+           短信验证码 / 微信扫码依赖 WorkBuddy 云（.cloud），
+           2026-11-08 云 SDK 下线后已整段删除，DOM + 逻辑都不再存在。 -->
+      <div class="login-bff" id="localAuthWrap" style="margin-top:2px">
+        <details id="localAuthDetails" open>
+          <summary>账号登录<span class="bff-tag" id="localAuthState">手机号 + 密码</span></summary>
+          <div class="fld">
+            <input id="localPhone" type="tel" placeholder="11 位手机号" maxlength="11" autocomplete="username" spellcheck="false">
+          </div>
+          <div class="fld">
+            <input id="localPwd" type="password" placeholder="密码（至少 8 位）" autocomplete="current-password">
+          </div>
+          <div id="localRegFields" style="display:none">
+            <div class="fld">
+              <input id="localPwd2" type="password" placeholder="确认密码" autocomplete="new-password">
+            </div>
+            <div class="fld">
+              <input id="localName" type="text" placeholder="姓名" maxlength="40" autocomplete="name">
+            </div>
+            <div class="fld">
+              <input id="localCompany" type="text" placeholder="公司 / 工作区名称" maxlength="60" autocomplete="organization">
+            </div>
+            <div class="fld">
+              <input id="localCode" type="text" placeholder="邀请码（管理员提供）" maxlength="64" autocomplete="off">
+            </div>
+          </div>
+          <div class="fld-err" id="localAuthErr"></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn primary" id="localLoginBtn" type="button" style="flex:1;justify-content:center">登录</button>
+            <button class="btn ghost" id="localRegisterBtn" type="button" style="flex:1;justify-content:center;display:none">注册新账号</button>
+          </div>
+          <div style="text-align:right;margin-top:6px">
+            <button class="auth-link" id="localForgotBtn" type="button">忘记密码？</button>
+          </div>
+        </details>
+      </div>
+
+      <label class="agree"><input type="checkbox" id="agreeChk" checked> 我已阅读并同意《服务协议》与《隐私政策》，并授权平台在合规范围内处理客户线索数据</label>
+
+      <div class="login-alt" style="display:none">
+        <button class="btn ghost" id="demoBtn" type="button">先看 DEMO 演示 →</button>
+      </div>
+
+      <div class="login-bff" id="bffTokenWrap" style="display:none">
+        <details id="bffTokenDetails">
+          <summary>服务端令牌（BFF Token）<span class="bff-tag" id="bffState">未设置</span></summary>
+          <p class="bff-sub">仅 IP 版（本地 / 服务器部署）需要：填入后渲染、采集、GEO、保存站点等 BFF 功能方可调用。官方域名版无需填写。</p>
+          <div class="fld">
+            <input id="bffTokenInput" type="password" placeholder="粘贴 API_TOKEN（与服务器 .env.local 一致）" autocomplete="off" spellcheck="false">
+            <button class="btn sm" id="bffTokenSave" type="button">保存</button>
+          </div>
+          <div class="fld-err" id="bffTokenErr"></div>
+          <button class="btn primary lg" id="bffEnterBtn" type="button" style="margin-top:10px;width:100%;justify-content:center">用服务端令牌进入 →</button>
+        </details>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app">
+
+  <!-- ==================== 侧边栏 ==================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 44 44" width="36" height="36" aria-label="ProFound">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#4C3FE4"/>
+            <stop offset=".55" stop-color="#8B5CF6"/>
+            <stop offset="1" stop-color="#F5A524"/>
+          </linearGradient>
+        </defs>
+        <rect width="44" height="44" rx="13" fill="url(#brandGrad)"/>
+        <rect x="10.5" y="25.5" width="5.6" height="9" rx="2.8" fill="#fff" opacity=".5"/>
+        <rect x="19.2" y="19.5" width="5.6" height="15" rx="2.8" fill="#fff" opacity=".78"/>
+        <rect x="27.9" y="13" width="5.6" height="21.5" rx="2.8" fill="#fff"/>
+        <circle cx="30.7" cy="8.4" r="3.1" fill="#fff"/>
+      </svg>
+      <div class="brand-txt">
+        <strong>ProFound</strong>
+        <span>AI 全链路企业增长引擎</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <div class="nav-group">
+        <div class="nav-label">总览</div>
+        <div class="nav-item active" data-view="v-dashboard"><svg class="icon"><use href="#i-grid"/></svg>数据中台</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">AI灵讯</div>
+        <div class="nav-item" data-view="v-content"><svg class="icon"><use href="#i-comment"/></svg>评论区获客<span class="badge" id="navLeadBadge" hidden>0</span></div>
+        <div class="nav-item" data-view="v-more"><svg class="icon"><use href="#i-more"/></svg>更多获客</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">GEO直通车</div>
+        <div class="nav-item" data-view="v-geo"><svg class="icon"><use href="#i-globe"/></svg>GEO优化引擎</div>
+        <div class="nav-item" data-view="v-geobuild"><svg class="icon"><use href="#i-layers"/></svg>AI秒搭建站</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">DeepWork智伴</div>
+        <div class="nav-item" data-view="v-matrix"><svg class="icon"><use href="#i-scissors"/></svg>AI智能剪辑</div>
+        <div class="nav-item" data-view="v-live"><svg class="icon"><use href="#i-video"/></svg>AI数字人</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">经营支撑</div>
+        <div class="nav-item" data-view="v-employee"><svg class="icon"><use href="#i-robot"/></svg>AI 智能员工<span class="dot"></span></div>
+        <div class="nav-item" data-view="v-crm"><svg class="icon"><use href="#i-users"/></svg>客户管理 CRM</div>
+        <div class="nav-item" data-view="v-pricing"><svg class="icon"><use href="#i-crown"/></svg>会员套餐</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">系统</div>
+        <div class="nav-item" data-view="v-settings"><svg class="icon"><use href="#i-shield"/></svg>风控与设置</div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="plan-card" id="sidePlan">
+        <b>加载中…</b>
+        <p>正在读取套餐信息</p>
+        <button data-go="v-pricing">查看套餐</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="backdrop" id="backdrop"></div>
+
+  <!-- ==================== 主区 ==================== -->
+  <main class="main">
+    <div class="demo-bar">
+      <svg class="icon"><use href="#i-spark"/></svg>
+      演示模式 · 数据来自 demo/dataset.js（独立演示库），不会写入生产数据
+      <button id="demoLoginBtn" type="button">登录后使用真实数据</button>
+    </div>
+    <header class="topbar">
+      <div class="icon-btn" id="menuBtn"><svg class="icon"><use href="#i-menu"/></svg></div>
+      <div class="crumb">
+        <h1 id="pageTitle">数据中台</h1>
+        <span id="pageSub">AI灵讯 + GEO直通车 + DeepWork智伴 三线合一的增长数据中枢</span>
+      </div>
+      <div class="search">
+        <svg class="icon"><use href="#i-search"/></svg>
+        <input placeholder="搜索客户 / 关键词 / 视频任务">
+      </div>
+      <div class="icon-btn" id="deviceBtn" title="切换手机/电脑预览"><svg class="icon"><use href="#i-smartphone"/></svg></div>
+      <div class="icon-btn bell" id="bellBtn" title="通知"><svg class="icon"><use href="#i-bell"/></svg></div>
+      <div class="avatar">王</div>
+    </header>
+    <!-- 通知面板：顶栏铃铛下拉 -->
+    <div class="bell-panel" id="bellPanel" aria-hidden="true">
+      <div class="bell-hd"><b>通知</b><span class="tag" id="bellCount">0</span></div>
+      <div class="bell-list" id="bellList"><div class="bell-item"><span>正在获取系统状态…</span></div></div>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- ==========================================================
+           视图 1：数据中台
+           ========================================================== -->
+      <section class="view active" id="v-dashboard">
+        <div class="line-strip">
+          <div class="ls-item" data-go="v-content" title="进入 AI灵讯 · 评论区获客">
+            <div class="ls-ico" style="background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-radar"/></svg></div>
+            <div class="ls-main"><b>AI灵讯</b><span>评论区获客 · 私信触达 · 更多获客</span></div>
+            <div class="ls-go"><svg class="icon"><use href="#i-chevron"/></svg></div>
+          </div>
+          <div class="ls-item" data-go="v-geo" title="进入 GEO直通车">
+            <div class="ls-ico" style="background:var(--accent-soft);color:var(--accent)"><svg class="icon"><use href="#i-globe"/></svg></div>
+            <div class="ls-main"><b>GEO直通车</b><span>GEO优化引擎 · AI秒搭建站</span></div>
+            <div class="ls-go"><svg class="icon"><use href="#i-chevron"/></svg></div>
+          </div>
+          <div class="ls-item" data-go="v-matrix" title="进入 DeepWork智伴 · AI智能剪辑">
+            <div class="ls-ico" style="background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-scissors"/></svg></div>
+            <div class="ls-main"><b>DeepWork智伴</b><span>AI智能剪辑 · AI数字人</span></div>
+            <div class="ls-go"><svg class="icon"><use href="#i-chevron"/></svg></div>
+          </div>
+        </div>
+
+        <div class="grid g4" style="margin-bottom:16px">
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-users"/></svg></div>
+              <div class="k-label">今日意向客户</div>
+            </div>
+            <div class="k-val">128<small class="unit">人</small></div>
+            <div class="k-foot">
+              <span class="trend up"><svg class="icon"><use href="#i-arrow-up"/></svg>23.4%</span>
+              <span class="vs">较昨日</span>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)"><svg class="icon"><use href="#i-comment"/></svg></div>
+              <div class="k-label">私信触达</div>
+            </div>
+            <div class="k-val">1,846<small class="unit">条</small></div>
+            <div class="k-foot">
+              <span class="trend up"><svg class="icon"><use href="#i-arrow-up"/></svg>11.8%</span>
+              <span class="vs">较昨日</span>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div class="k-ico" style="background:var(--green-soft);color:var(--green)"><svg class="icon"><use href="#i-link"/></svg></div>
+              <div class="k-label">加微成功</div>
+            </div>
+            <div class="k-val">312<small class="unit">人</small></div>
+            <div class="k-foot">
+              <span class="trend up"><svg class="icon"><use href="#i-arrow-up"/></svg>8.6%</span>
+              <span class="vs">通过率 16.9%</span>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-wallet"/></svg></div>
+              <div class="k-label">成交金额</div>
+            </div>
+            <div class="k-val"><small>¥</small>86,400</div>
+            <div class="k-foot">
+              <span class="trend down"><svg class="icon"><use href="#i-arrow-down"/></svg>3.2%</span>
+              <span class="vs">较昨日</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid g-2-1">
+          <!-- 趋势图 -->
+          <div class="card">
+            <div class="card-head">
+              <h3>线索获取趋势</h3>
+              <span class="sub">近 7 天</span>
+              <div class="right">
+                <div class="legend">
+                  <span><i style="background:var(--primary)"></i>意向线索</span>
+                  <span><i style="background:var(--accent)"></i>加微成功</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body" style="padding:14px 10px 10px">
+              <svg id="trendSvg" viewBox="0 0 640 210" style="width:100%;height:auto;display:block">
+                <defs>
+                  <linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4C3FE4" stop-opacity=".22"/>
+                    <stop offset="100%" stop-color="#4C3FE4" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <!-- 网格 -->
+                <g stroke="#F0F0F7" stroke-width="1">
+                  <line x1="40" y1="20" x2="612" y2="20"/>
+                  <line x1="40" y1="60" x2="612" y2="60"/>
+                  <line x1="40" y1="100" x2="612" y2="100"/>
+                  <line x1="40" y1="140" x2="612" y2="140"/>
+                  <line x1="40" y1="180" x2="612" y2="180"/>
+                </g>
+                <!-- Y 轴标签 -->
+                <g fill="#8E8DA5" font-size="11" font-family="system-ui" text-anchor="end">
+                  <text x="30" y="24">140</text>
+                  <text x="30" y="64">105</text>
+                  <text x="30" y="104">70</text>
+                  <text x="30" y="144">35</text>
+                  <text x="30" y="184">0</text>
+                </g>
+                <!-- 面积 -->
+                <path d="M40,109.1 L133,90.9 L226,98.9 L319,71.4 L412,79.4 L505,52 L598,33.7 L598,180 L40,180 Z" fill="url(#areaG)"/>
+                <!-- 主折线 -->
+                <path d="M40,109.1 L133,90.9 L226,98.9 L319,71.4 L412,79.4 L505,52 L598,33.7"
+                      fill="none" stroke="#4C3FE4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- 副折线（加微成功） -->
+                <path d="M40,148 L133,141 L226,144.5 L319,133 L412,136 L505,124 L598,113"
+                      fill="none" stroke="#F5A524" stroke-width="2.2" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-dasharray="0"/>
+                <!-- 数据点 -->
+                <g fill="#fff" stroke="#4C3FE4" stroke-width="2.4">
+                  <circle cx="40" cy="109.1" r="3.6"/><circle cx="133" cy="90.9" r="3.6"/>
+                  <circle cx="226" cy="98.9" r="3.6"/><circle cx="319" cy="71.4" r="3.6"/>
+                  <circle cx="412" cy="79.4" r="3.6"/><circle cx="505" cy="52" r="3.6"/>
+                  <circle cx="598" cy="33.7" r="4.6" stroke-width="3"/>
+                </g>
+                <g fill="#fff" stroke="#F5A524" stroke-width="2">
+                  <circle cx="40" cy="148" r="3"/><circle cx="133" cy="141" r="3"/>
+                  <circle cx="226" cy="144.5" r="3"/><circle cx="319" cy="133" r="3"/>
+                  <circle cx="412" cy="136" r="3"/><circle cx="505" cy="124" r="3"/>
+                  <circle cx="598" cy="113" r="3.4"/>
+                </g>
+                <!-- X 轴标签 -->
+                <g fill="#8E8DA5" font-size="11" font-family="system-ui" text-anchor="middle">
+                  <text x="40" y="202">9/27</text><text x="133" y="202">9/28</text>
+                  <text x="226" y="202">9/29</text><text x="319" y="202">9/30</text>
+                  <text x="412" y="202">10/1</text><text x="505" y="202">10/2</text>
+                  <text x="598" y="202" fill="#4C3FE4" font-weight="700">今日</text>
+                </g>
+                <!-- 最新值气泡由 renderDashInsights() 依据真实数据渲染，模板不再写死涨幅 -->
+              </svg>
+              <div id="trendEmpty" class="empty" style="margin:4px 14px 8px" hidden>暂无线索数据，接入后显示近 7 天趋势</div>
+              <div style="display:flex;justify-content:space-between;padding:2px 14px 0" class="chart-tip">
+                <span>数据源：抖音 / 快手 / 小红书 / 视频号 评论区 + 私信</span>
+                <span>每 5 分钟刷新</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 平台分布（真实数据渲染，无数据时显示空态） -->
+          <div class="card">
+            <div class="card-head"><h3>线索平台分布</h3><span class="sub">全量</span></div>
+            <div class="card-body" style="padding:14px 18px">
+              <div id="platSplit"></div>
+
+              <div class="conv-wrap">
+                <div class="ring">
+                  <svg width="64" height="64">
+                    <circle cx="32" cy="32" r="27" fill="none" stroke="#F0F0F7" stroke-width="7"/>
+                    <circle id="convArc" cx="32" cy="32" r="27" fill="none" stroke="#12a150" stroke-width="7"
+                            stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6"/>
+                  </svg>
+                  <div class="ring-val" id="convVal" style="color:var(--green)">—</div>
+                </div>
+                <div style="font-size:12.5px;color:var(--text-2);line-height:1.7">
+                  <b style="font-size:13px;color:var(--text)" id="convTitle">加微转化率</b><br>
+                  <span id="convSub" style="color:var(--text-3)">暂无线索数据</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid g-2-1" style="margin-top:16px">
+          <!-- 最新线索 -->
+          <div class="card">
+            <div class="card-head">
+              <h3>实时线索流</h3>
+              <div class="right">
+                <span class="tag green"><span class="dot-live pulse"></span>实时</span>
+                <button class="btn sm">全部线索</button>
+                <button class="fold-btn" data-fold type="button" aria-expanded="true" title="收起"><svg class="icon"><use href="#i-chevron"/></svg></button>
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table class="tbl" id="leadTable">
+                <thead>
+                  <tr><th>客户</th><th>来源</th><th>意向内容</th><th>意向分</th><th>状态</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="cell-user"><div class="av a1">张</div><div><b>张姐美业连锁</b><span>2 分钟前</span></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:6px"><span class="pf dy">抖</span>抖音评论</div></td>
+                    <td style="color:var(--text-2)">抖音代运营一个月多少钱？我们 6 家店要起量</td>
+                    <td><span class="score" style="color:var(--red)"><span class="score-bar"><i style="width:92%;background:var(--red)"></i></span>92</span></td>
+                    <td><span class="tag green">已加微</span></td>
+                    <td><button class="btn sm">跟进</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av a2">李</div><div><b>李总 · 连锁餐饮</b><span>6 分钟前</span></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:6px"><span class="pf ks">快</span>快手评论</div></td>
+                    <td style="color:var(--text-2)">千川投流 30 万预算，能保 ROI 吗？想先试投</td>
+                    <td><span class="score" style="color:var(--red)"><span class="score-bar"><i style="width:96%;background:var(--red)"></i></span>96</span></td>
+                    <td><span class="tag amber">待私信</span></td>
+                    <td><button class="btn sm primary">立即私信</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av a3">陈</div><div><b>陈小姐</b><span>11 分钟前</span></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:6px"><span class="pf xhs">红</span>小红书评论</div></td>
+                    <td style="color:var(--text-2)">团购上架怎么收费？想做 3 家门店试试</td>
+                    <td><span class="score" style="color:var(--amber)"><span class="score-bar"><i style="width:78%;background:var(--amber)"></i></span>78</span></td>
+                    <td><span class="tag blue">洽谈中</span></td>
+                    <td><button class="btn sm">跟进</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av a4">赵</div><div><b>赵老板 · 家居卖场</b><span>18 分钟前</span></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:6px"><span class="pf sph">视</span>视频号评论</div></td>
+                    <td style="color:var(--text-2)">留个电话，我这边门店要长期供货</td>
+                    <td><span class="score" style="color:var(--red)"><span class="score-bar"><i style="width:89%;background:var(--red)"></i></span>89</span></td>
+                    <td><span class="tag green">已加微</span></td>
+                    <td><button class="btn sm">跟进</button></td>
+                  </tr>
+                  <tr>
+                    <td><div class="cell-user"><div class="av a5">周</div><div><b>周姐 · 连锁美甲</b><span>25 分钟前</span></div></div></td>
+                    <td><div style="display:flex;align-items:center;gap:6px"><span class="pf dy">抖</span>抖音评论</div></td>
+                    <td style="color:var(--text-2)">短视频拍摄外包，一个月能出几条</td>
+                    <td><span class="score" style="color:var(--amber)"><span class="score-bar"><i style="width:71%;background:var(--amber)"></i></span>71</span></td>
+                    <td><span class="tag">待筛选</span></td>
+                    <td><button class="btn sm">查看</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 数据口径：替代原先写死 12/312/46/1,551 的「AI 员工今日战绩」 -->
+          <div class="card">
+            <div class="card-head">
+              <h3>数据口径</h3>
+              <div class="right">
+                <span class="tag" id="dashSourceTag">—</span>
+                <button class="fold-btn" data-fold type="button" aria-expanded="true" title="收起"><svg class="icon"><use href="#i-chevron"/></svg></button>
+              </div>
+            </div>
+            <div class="card-body" id="dataQuality" style="padding:14px 18px">
+              <div class="empty" style="padding:18px 12px">接入数据后自动统计</div>
+            </div>
+          </div>
+        </div>
+
+        <details class="dash-note">
+          <summary><svg class="icon"><use href="#i-doc"/></svg>数据口径与更新频率</summary>
+          <p>线索数按去重后的有效意向客户计；加微成功含人工补加；成交金额取 CRM 已回款订单；GEO 词数为监测中关键词。数据每 5 分钟刷新，演示模式为样例数据，不写入云端。</p>
+        </details>
+      </section>
+
+      <!-- ==========================================================
+           视图 2：评论区获客
+           ========================================================== -->
+      <section class="view" id="v-content">
+
+        <!-- ========== 三栏同屏：目标配置 / 实时评论流 / 线索台账 ========== -->
+        <div class="cc-wrap">
+          <div class="cc-bar">
+            <div class="cc-bar-main">
+              <span class="cc-dot idle" id="ccDot"></span>
+              <div class="cc-bar-txt">
+                <b id="ccStateText">正在读取采集服务状态</b>
+                <span id="ccStateSub">—</span>
+              </div>
+            </div>
+            <div class="cc-kpis">
+              <div class="cc-kpi"><b id="ccKpiNew">0</b><span>今日新增</span></div>
+              <div class="cc-kpi"><b id="ccKpiHigh">0</b><span>高意向</span></div>
+              <div class="cc-kpi"><b id="ccKpiPool">0</b><span>台账总数</span></div>
+              <div class="cc-kpi"><b id="ccKpiScan">—</b><span>上次扫描</span></div>
+            </div>
+            <div class="cc-bar-acts">
+              <select id="ccCampFilter" class="cc-camp-filter" title="按战役筛选">
+                <option value="">全部战役</option>
+              </select>
+              <button class="btn" id="ccBtnExceptions" type="button">异常 <b id="ccExcCnt">0</b></button>
+              <button class="btn" id="ccBtnRefresh" type="button">
+                <svg class="icon"><use href="#i-refresh"/></svg>刷新</button>
+              <button class="btn primary" id="ccBtnScan" type="button">
+                <svg class="icon"><use href="#i-radar"/></svg>全部扫一轮</button>
+            </div>
+          </div>
+
+          <div class="cc-funnel" id="ccFunnel"></div>
+
+          <div class="cc-grid">
+            <!-- 左：一句话开跑 —— 输入即建目标并跑首轮；账号/词库收进折叠，不进主流程 -->
+            <aside class="cc-panel cc-left">
+              <!-- ① 执行端：新手第一步 -->
+              <div class="cc-step-box" id="ccStepExec">
+                <div class="cc-step-hd">
+                  <span class="cc-step-no">1</span><b>执行端</b>
+                  <span class="cc-step-state" id="ccDevState">检测中…</span>
+                </div>
+                <div class="cc-step-body">
+                  <button class="cc-step-primary" id="ccBtnBridgeStart" type="button">启动并连接</button>
+                  <button class="cc-step-link" id="ccBtnBridgeHelp" type="button">安装/说明</button>
+                </div>
+                <div class="cc-step-hint" id="ccDevHint">首次使用先点「启动并连接」；没反应就点「安装/说明」。</div>
+              </div>
+
+              <!-- ② 账号矩阵：四平台 Login 态 -->
+              <details class="cc-acc-fold" id="ccAccFold" open>
+                <summary><span class="cc-step-no">2</span> 账号矩阵</summary>
+                <div class="cc-ph">
+                  <b>账号矩阵</b>
+                  <span class="cc-ph-sub" id="ccAccCnt">0 个</span>
+                  <button class="cc-mini" id="ccBtnNewAcc" type="button">添加</button>
+                </div>
+                <div class="cc-accs" id="ccAccs"></div>
+
+                <div class="cc-form" id="ccAccForm" style="display:none">
+                  <div class="cc-frow cc-frow-2">
+                    <select id="ccAFPlatform" aria-label="平台">
+                      <option value="douyin">抖音</option>
+                      <option value="xhs">小红书</option>
+                      <option value="kuaishou">快手</option>
+                      <option value="sph">视频号</option>
+                    </select>
+                    <input id="ccAFNick" placeholder="账号昵称" autocomplete="off">
+                  </div>
+                  <div class="cc-frow">
+                    <input id="ccAFDir" placeholder="浏览器目录：不用填，扫码登录后自动生成" autocomplete="off">
+                  </div>
+                  <div class="cc-frow cc-frow-2">
+                    <input id="ccAFQuota" type="number" min="1" max="500" value="30" placeholder="采集/小时（建议30）">
+                    <input id="ccAFCommentQuota" type="number" min="0" max="100" value="0" placeholder="评论/小时（0=不限）">
+                    <input id="ccAFNote" placeholder="备注（可选）" autocomplete="off">
+                  </div>
+                  <div class="cc-frow cc-form-acts">
+                    <button class="btn sm" id="ccAFCancel" type="button">取消</button>
+                    <button class="btn sm primary" id="ccAFSave" type="button">保存账号</button>
+                  </div>
+                  <div class="cc-fhint" id="ccAFHint">登录态在采集机的浏览器配置目录里；填了目录服务端才能替你检测。</div>
+                </div>
+              </details>
+
+              <!-- ③ 战役：主界面只留关键词 + 平台 + 开始获客 -->
+              <div class="cc-camp" id="ccCampStep">
+                <div class="cc-ph">
+                  <span class="cc-step-no">3</span><b>战役</b>
+                  <span class="cc-ph-sub">关键词 + 平台</span>
+                </div>
+                <div class="cc-camp-body">
+                  <textarea id="ccCampKeywords" rows="2" placeholder="关键词，一行一个：保洁多少钱 / 开荒保洁 / 深度保洁"></textarea>
+                  <div class="cc-camp-plats" id="ccCampPlats">
+                    <label><input type="checkbox" value="douyin" checked>抖音</label>
+                    <label><input type="checkbox" value="xhs">小红书</label>
+                    <label><input type="checkbox" value="kuaishou">快手</label>
+                    <label><input type="checkbox" value="sph">视频号</label>
+                  </div>
+                  <div class="cc-camp-foot">
+                    <button id="ccCampStart" type="button">开始获客</button>
+                  </div>
+                  <details class="cc-camp-advanced" id="ccCampAdvanced">
+                    <summary>高级设置</summary>
+                    <input id="ccCampName" placeholder="战役名称（可空，如：保洁-杭州）" autocomplete="off">
+                    <div class="cc-camp-2">
+                      <input id="ccCampIndustry" placeholder="行业，如：家政保洁" autocomplete="off">
+                      <input id="ccCampCity" placeholder="城市，如：杭州" autocomplete="off">
+                    </div>
+                    <input id="ccCampCompetitors" placeholder="竞品/博主链接（可选，一行一个）" autocomplete="off">
+                    <div class="cc-camp-accounts" id="ccCampAccounts"></div>
+                    <div class="cc-camp-daily">
+                      <label>每日上限 <input id="ccCampDaily" type="number" min="1" max="200" value="40"></label>
+                    </div>
+                  </details>
+                  <div class="cc-camp-list" id="ccCampList"></div>
+                </div>
+              </div>
+
+              <div class="cc-step-next"><span class="cc-step-no">4</span> 去中栏看作品；战役卡里点「生成触达任务」</div>
+
+              <!-- 启动说明书：默认收起，新手第一次可展开 -->
+              <details class="cc-help" id="ccHelp">
+                <summary>第一次使用？启动说明</summary>
+                <div class="cc-help-body">
+                  <p><b>1. 安装</b>：双击 <code>install-bridge.cmd</code> 一次，之后开机自动启动。</p>
+                  <p><b>2. 扩展</b>：在装扩展的浏览器打开 <code>chrome://extensions</code> 或 <code>edge://extensions</code>，刷新「AI智盈 · 浏览器采集器」到 1.3.8。</p>
+                  <p><b>3. 执行端</b>：点上面的「启动并连接」；浏览器问是否打开 <code>aizhiying://</code> 时点允许。</p>
+                  <p><b>4. 登录</b>：第②步点平台块，中间栏扫码。</p>
+                  <p><b>5. 开始</b>：第③步填关键词、选平台，点「开始获客」。</p>
+                  <p class="muted">没反应：双击 install-bridge.cmd，或手动双击 start-local.cmd。</p>
+                </div>
+              </details>
+            </aside>
+
+            <!-- 中：作品池（评论流与线索台账重合，已移除） -->
+            <section class="cc-panel cc-mid">
+              <div class="cc-ph">
+                <b id="ccMidTitle">作品池</b>
+                <span class="cc-live" id="ccLive">20 条/页</span>
+              </div>
+              <div class="cc-login" id="ccLogin" style="display:none"></div>
+              <div class="cc-notes-bar" id="ccNotesBar">
+                <span class="cc-nb-sub" id="ccNotesSub">共 0 个作品</span>
+                <span class="cc-nb-gap"></span>
+                <button class="cc-nb-btn" id="ccBtnCmtPause" type="button">暂停评论</button>
+                <button class="cc-nb-btn" id="ccBtnCmtClear" type="button" title="清空当前作品池及未执行的评论/点赞排队">清空作品+排队</button>
+                <button class="cc-nb-btn" id="ccBtnBatch" type="button">逐条评论（一次一条）</button>
+              </div>
+              <div class="cc-notes" id="ccNotes"></div>
+
+              <!-- 评论抽屉：手工写 / AI 仿写 → 由本机浏览器发布 -->
+              <div class="cc-cmt-mask" id="ccCmtMask" style="display:none">
+                <div class="cc-cmt" role="dialog" aria-modal="true" aria-labelledby="ccCmtHd">
+                  <div class="cc-cmt-h">
+                    <b id="ccCmtHd">发表评论</b>
+                    <button class="cc-cmt-x" id="ccCmtClose" type="button" aria-label="关闭">×</button>
+                  </div>
+                  <div class="cc-cmt-note" id="ccCmtNote"></div>
+                  <textarea id="ccCmtText" maxlength="120" rows="3" placeholder="写一句像真人说的话，或点下面「AI 仿写」按标题生成几条"></textarea>
+                  <div class="cc-cmt-row">
+                    <label class="cc-cmt-like"><input type="checkbox" id="ccCmtLike" checked> 同时点赞</label>
+                    <button class="cc-cmt-ai" id="ccCmtAi" type="button">AI 仿写</button>
+                    <span class="cc-cmt-cnt" id="ccCmtCnt">0/120</span>
+                    <span style="flex:1"></span>
+                    <button class="btn sm" id="ccCmtCancel" type="button">取消</button>
+                    <button class="btn sm primary" id="ccCmtSend" type="button">发布评论</button>
+                  </div>
+                  <div class="cc-cmt-sug" id="ccCmtSug"></div>
+                  <div class="cc-cmt-hint" id="ccCmtHint">以本机 Chrome 里已登录的账号发布 · 勾选「同时点赞」会在同一次打开里先点赞再评论 · 内容合规由你确认</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 右：线索台账 -->
+            <aside class="cc-panel cc-right">
+              <div class="cc-ph">
+                <b>线索台账</b>
+                <span class="cc-ph-sub" id="ccLeadTotal">0 条</span>
+              </div>
+              <div class="cc-tabs cc-tabs-wrap" id="ccStageTabs">
+                <span class="cc-tab on" data-stage="">全部</span>
+                <span class="cc-tab" data-stage="new">待跟进</span>
+                <span class="cc-tab" data-stage="contacted">已联系</span>
+                <span class="cc-tab" data-stage="wechat">已加微</span>
+                <span class="cc-tab" data-stage="won">已成交</span>
+              </div>
+              <div class="cc-ledgers" id="ccLedger"></div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- 异常队列：任务失败 + 评论失败，统一入口 -->
+        <div class="cc-exc-mask" id="ccExcMask" style="display:none">
+          <div class="cc-exc" role="dialog" aria-modal="true" aria-labelledby="ccExcHd">
+            <div class="cc-exc-h">
+              <b id="ccExcHd">异常队列</b>
+              <span class="cc-exc-sub" id="ccExcSub">0 条</span>
+              <button class="cc-mini" id="ccExcClear" type="button" style="margin-left:auto;margin-right:8px">清空记录</button>
+              <button class="cc-exc-x" id="ccExcClose" type="button" aria-label="关闭">×</button>
+            </div>
+            <div class="cc-exc-list" id="ccExcList"></div>
+          </div>
+        </div>
+
+        <div id="ccLegacy" style="display:none">
+        <div class="alert info" style="margin-bottom:18px">
+          <svg class="icon"><use href="#i-radar"/></svg>
+          <div>
+            <b>AI 正在 4 大平台评论区 7×24 小时扫描意向客户</b>
+            输入你的产品关键词，系统自动监听抖音 / 快手 / 小红书 / 视频号全平台视频评论区，
+            识别「报价 / 预算 / 起量 / 留电话」等高意向信号并自动打分入库。
+          </div>
+        </div>
+
+        <!-- ---------- 评论区采集器 ---------- -->
+        <div class="col-wrap" id="colWrap">
+          <div class="card col-head">
+            <div class="col-status">
+              <span class="col-dot warn" id="colDot"></span>
+              <div class="col-st-main">
+                <div class="col-st-title">
+                  <b id="colStateText">采集服务未配置</b>
+                  <span class="tag amber" id="colModeTag">本地模拟通道</span>
+                  <span class="tag" id="colServiceTag">未接入第三方采集服务</span>
+                </div>
+                <div class="col-st-sub" id="colStatusSub">平台官方均未开放评论区接口，真实采集需接入第三方采集服务（云机池 / 代理 IP 集群）。未配置时采集器走本地模拟通道，任务调度、抓取、打分、去重、入库全链路照常执行。</div>
+              </div>
+            </div>
+            <div class="col-funnel" id="colFunnel">
+              <div class="cf-step s1">
+                <div class="cf-hd"><b id="colKpiScan">0</b><span>抓取评论</span><em>100%</em></div>
+                <div class="cf-track"><i id="colBarScan" style="width:100%"></i></div>
+              </div>
+              <div class="cf-sep">›</div>
+              <div class="cf-step s2">
+                <div class="cf-hd"><b id="colKpiHit">0</b><span>命中高意向</span><em id="colRateHit">—</em></div>
+                <div class="cf-track"><i id="colBarHit" style="width:0"></i></div>
+              </div>
+              <div class="cf-sep">›</div>
+              <div class="cf-step s3">
+                <div class="cf-hd"><b id="colKpiIn">0</b><span>已入线索库</span><em id="colRateIn">—</em></div>
+                <div class="cf-track"><i id="colBarIn" style="width:0"></i></div>
+              </div>
+              <div class="cf-side"><b id="colKpiDup">0</b><span>去重拦截</span></div>
+            </div>
+            <div class="col-acts">
+              <button class="btn primary" data-col="run" type="button">
+                <svg class="icon"><use href="#i-radar"/></svg>立即采集一轮</button>
+              <button class="btn" data-col="cfg" type="button">
+                <svg class="icon"><use href="#i-setting"/></svg>采集服务配置</button>
+              <button class="btn" data-col="probe" type="button">
+                <svg class="icon"><use href="#i-link"/></svg>测试连接</button>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:20px">
+            <h2>平台适配器</h2>
+            <span class="hint" id="colAdHint">4 个平台 · 各自独立的授权方式与频控配额</span>
+            <div class="line"></div>
+            <button class="btn" data-col="probeAll" type="button">
+              <svg class="icon"><use href="#i-refresh"/></svg>同步适配器状态</button>
+          </div>
+          <div class="grid col-adapters" id="colAdapters"></div>
+
+<!-- __COLSD_HTML_START__ -->
+<!-- 服务端调度模块的隐藏挂载点：任务列表与状态摘要已并入下方「关键词监听任务」与顶部采集卡。
+     SD 引擎依赖 #colsdCard 启动（boot 判断），故保留节点但不再可见。 -->
+<div id="colsdCard" style="display:none">
+  <span class="colsd-dot" id="colsdDot"></span>
+  <b id="colsdChan"></b>
+  <div class="colsd-chips" id="colsdChips"></div>
+  <div class="colsd-list" id="colsdList"></div>
+</div>
+<!-- __COLSD_HTML_END__ -->
+
+        </div>
+
+
+        <div class="section-title">
+          <h2>关键词监听任务</h2>
+          <span class="hint">由服务端常驻调度，关掉页面也会继续跑</span>
+          <div class="line"></div>
+          <button class="btn" data-colsd="refresh" type="button">
+            <svg class="icon"><use href="#i-refresh"/></svg>刷新调度状态</button>
+          <button class="btn primary"><svg class="icon"><use href="#i-plus"/></svg>新建监听任务</button>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr">
+          <div>
+            <div class="tabs" style="margin-bottom:14px">
+              <div class="tab active" data-pf="all">全部平台</div>
+              <div class="tab" data-pf="dy"><span class="pf dy">抖</span>抖音</div>
+              <div class="tab" data-pf="ks"><span class="pf ks">快</span>快手</div>
+              <div class="tab" data-pf="xhs"><span class="pf xhs">红</span>小红书</div>
+              <div class="tab" data-pf="sph"><span class="pf sph">视</span>视频号</div>
+            </div>
+
+            <div class="kw-list">
+              <div class="kw-item">
+                <div class="switch on"></div>
+                <div class="kw-main">
+                  <div class="kw-name">抖音代运营 报价</div>
+                  <div class="kw-tags">
+                    <span class="tag blue">抖音</span><span class="tag blue">快手</span>
+                    <span class="tag accent">高意向词</span><span class="tag">含"多少钱/套餐/起量"</span>
+                  </div>
+                </div>
+                <div class="kw-stat"><b style="color:var(--primary)">46</b><span>今日线索</span></div>
+              </div>
+              <div class="kw-item">
+                <div class="switch on"></div>
+                <div class="kw-main">
+                  <div class="kw-name">千川投流 服务商 / 起量</div>
+                  <div class="kw-tags">
+                    <span class="tag blue">抖音</span><span class="tag blue">视频号</span>
+                    <span class="tag accent">高意向词</span><span class="tag">含"预算/ROI/试投"</span>
+                  </div>
+                </div>
+                <div class="kw-stat"><b style="color:var(--primary)">31</b><span>今日线索</span></div>
+              </div>
+              <div class="kw-item">
+                <div class="switch on"></div>
+                <div class="kw-main">
+                  <div class="kw-name">本地生活 团购 代运营</div>
+                  <div class="kw-tags">
+                    <span class="tag blue">小红书</span><span class="tag blue">抖音</span>
+                    <span class="tag amber">中意向词</span><span class="tag">含"团购/上架/门店"</span>
+                  </div>
+                </div>
+                <div class="kw-stat"><b style="color:var(--primary)">24</b><span>今日线索</span></div>
+              </div>
+              <div class="kw-item">
+                <div class="switch on"></div>
+                <div class="kw-main">
+                  <div class="kw-name">短视频 拍摄 外包</div>
+                  <div class="kw-tags">
+                    <span class="tag blue">快手</span><span class="tag blue">视频号</span>
+                    <span class="tag green">本地词</span><span class="tag">含"拍摄/剪辑/外包"</span>
+                  </div>
+                </div>
+                <div class="kw-stat"><b style="color:var(--primary)">18</b><span>今日线索</span></div>
+              </div>
+              <div class="kw-item">
+                <div class="switch"></div>
+                <div class="kw-main">
+                  <div class="kw-name">精准客源 CPL / 线索</div>
+                  <div class="kw-tags">
+                    <span class="tag blue">抖音</span><span class="tag blue">快手</span>
+                    <span class="tag amber">中意向词</span>
+                  </div>
+                </div>
+                <div class="kw-stat"><b style="color:var(--text-3)">9</b><span>今日线索</span></div>
+              </div>
+            </div>
+
+            <div class="section-title">
+              <h2>高意向线索</h2>
+              <span class="hint" id="leadFeedHint">按意向分排序 · 展示前 6 条</span>
+              <div class="line"></div>
+              <button class="btn" data-col="allLeads" type="button"><svg class="icon"><use href="#i-users"/></svg>查看全部线索池</button>
+              <button class="btn">导出到 CRM</button>
+            </div>
+
+            <div class="card" id="leadFeedCard">
+              <div class="lead">
+                <div class="av a2" style="width:34px;height:34px;font-size:12px">李</div>
+                <div class="lead-body">
+                  <div class="lead-top">
+                    <b>李总 · 连锁餐饮</b>
+                    <span class="tag green">意向 96</span>
+                    <span class="tag">抖音代运营</span>
+                  </div>
+                  <div class="lead-cmt">"千川投流 30 万预算，能保<em>ROI</em>吗？<em>想先试投</em>，能加个微信聊吗"</div>
+                  <div class="src-line">
+                    <span class="pf ks">快</span>快手 · @引力投放 · 视频《千川起量实战复盘》评论区 · 6 分钟前
+                  </div>
+                  <div class="lead-acts" style="margin-top:9px">
+                    <button class="btn sm primary"><svg class="icon"><use href="#i-send"/></svg>AI 代发私信</button>
+                    <button class="btn sm"><svg class="icon"><use href="#i-link"/></svg>引导加微</button>
+                    <button class="btn sm">加入 CRM</button>
+                    <button class="btn sm ghost">忽略</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lead">
+                <div class="av a1" style="width:34px;height:34px;font-size:12px">张</div>
+                <div class="lead-body">
+                  <div class="lead-top">
+                    <b>张姐美业连锁</b>
+                    <span class="tag green">意向 92</span>
+                    <span class="tag">本地生活团购</span>
+                  </div>
+                  <div class="lead-cmt">"<em>抖音代运营</em>一个月多少钱？<em>我们 6 家店</em>要起量"</div>
+                  <div class="src-line">
+                    <span class="pf dy">抖</span>抖音 · @星野流量研究所 · 视频《本地生活团购起量拆解》评论区 · 2 分钟前
+                  </div>
+                  <div class="lead-acts" style="margin-top:9px">
+                    <span class="tag green"><svg class="icon" style="width:12px;height:12px"><use href="#i-check"/></svg>已加微 · 备注「张姐·团购代运营」</span>
+                    <button class="btn sm">查看聊天</button>
+                    <button class="btn sm">设置跟进提醒</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lead">
+                <div class="av a4" style="width:34px;height:34px;font-size:12px">赵</div>
+                <div class="lead-body">
+                  <div class="lead-top">
+                    <b>赵老板 · 家居卖场</b>
+                    <span class="tag green">意向 89</span>
+                    <span class="tag amber">留电话</span>
+                  </div>
+                  <div class="lead-cmt">"留个<em>电话 138****6621</em>，我们全年<em>投放预算 80 万</em>，你们接吗"</div>
+                  <div class="src-line">
+                    <span class="pf sph">视</span>视频号 · @流量增长局 · 直播回放评论区 · 18 分钟前
+                    <span class="tag accent">已转 CRM 跟进</span>
+                  </div>
+                  <div class="lead-acts" style="margin-top:9px">
+                    <button class="btn sm primary"><svg class="icon"><use href="#i-phone"/></svg>转 CRM 跟进</button>
+                    <button class="btn sm">导入通讯录</button>
+                    <button class="btn sm ghost">标记已处理</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="section-title" style="margin-top:20px">
+          <h2>采集运行 · 实时日志</h2>
+          <span class="hint" id="colLogHint">展示抓取 → 打分 → 去重 → 入库每一步</span>
+          <div class="line"></div>
+          <button class="btn ghost" data-col="clearlog" type="button">清空日志</button>
+        </div>
+        <div class="fold-card" data-fold id="colLogFold">
+          <div class="fold-card-head" role="button" tabindex="0" aria-expanded="false">
+            <span class="fold-t"><svg class="icon"><use href="#i-chevron"/></svg>
+              <b>运行日志</b></span>
+            <span class="fold-r"><span class="geo-chip" id="colLogCnt">0 条</span></span>
+          </div>
+          <div class="fold-body">
+            <div class="col-log" id="colLog"></div>
+            <div class="col-prog">
+              <div class="col-prog-bar"><i id="colProgFill"></i></div>
+              <span id="colProgText">待运行</span>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================================
+           视图 4：更多获客（AI灵讯）
+           ========================================================== -->
+      <section class="view" id="v-more">
+        <div class="alert info" style="margin-bottom:18px">
+          <svg class="icon"><use href="#i-more"/></svg>
+          <div>
+            <b>更多获客 · 渠道扩展池</b>
+            已开通的获客入口在这里统一查看；待开通渠道提交申请后即可接入，线索自动汇入同一线索库与 CRM，不需要另建账号体系。
+          </div>
+        </div>
+
+        <div class="grid g4" style="margin-bottom:18px">
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-grid"/></svg></div>
+              <div class="k-label">已开通渠道</div>
+            </div>
+            <div class="k-val">6<small class="unit">个</small></div>
+            <div class="k-foot"><span class="vs">覆盖公域 + 私域 + AI 搜索</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)"><svg class="icon"><use href="#i-users"/></svg></div>
+              <div class="k-label">本月新增线索</div>
+            </div>
+            <div class="k-val">3,412<small class="unit">条</small></div>
+            <div class="k-foot"><span class="trend up"><svg class="icon"><use href="#i-arrow-up"/></svg>21.7%</span><span class="vs">较上月</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--green-soft);color:var(--green)"><svg class="icon"><use href="#i-wallet"/></svg></div>
+              <div class="k-label">平均获客成本</div>
+            </div>
+            <div class="k-val">¥16.8</div>
+            <div class="k-foot"><span class="trend down"><svg class="icon"><use href="#i-arrow-down"/></svg>6.4%</span><span class="vs">较上月</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-top">
+              <div style="width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-spark"/></svg></div>
+              <div class="k-label">待开通渠道</div>
+            </div>
+            <div class="k-val">6<small class="unit">个</small></div>
+            <div class="k-foot"><span class="vs">含 1 个内测通道</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>已开通渠道</h2><span class="hint">点击进入对应工作台</span><div class="line"></div>
+        </div>
+        <div class="grid g3" style="margin-bottom:22px">
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-comment"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">评论区获客</b><div style="font-size:11px;color:var(--text-3)">AI灵讯 · 运行中 · 今日 128 条线索</div></div>
+              <span class="tag green">已开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">监听抖音 / 快手 / 小红书 / 视频号评论区，高意向信号自动打分入库。</p>
+            <button class="btn sm" style="width:100%;justify-content:center" data-go="v-content">进入工作台</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-layers"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">AI智能剪辑</b><div style="font-size:11px;color:var(--text-3)">DeepWork智伴 · 运行中 · 今日成片 46 条</div></div>
+              <span class="tag green">已开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">素材智能切片、自动字幕配音、批量发布，一条流水线持续产出成片。</p>
+            <button class="btn sm" style="width:100%;justify-content:center" data-go="v-matrix">进入工作台</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)"><svg class="icon"><use href="#i-video"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">AI数字人</b><div style="font-size:11px;color:var(--text-3)">DeepWork智伴 · 形象+声音克隆</div></div>
+              <span class="tag green">已开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">数字人主播 4 平台无人值守，弹幕意向实时捕捉并转私信。</p>
+            <button class="btn sm" style="width:100%;justify-content:center" data-go="v-live">进入工作台</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-globe"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">GEO直通车</b><div style="font-size:11px;color:var(--text-3)">GEO直通车 · 24 词监测中</div></div>
+              <span class="tag green">已开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">让豆包、元宝等 AI 搜索在答案里主动推荐你的品牌。</p>
+            <button class="btn sm" style="width:100%;justify-content:center" data-go="v-geo">进入工作台</button>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>待开通渠道</h2><span class="hint">开通后自动接入线索库与 CRM</span><div class="line"></div>
+        </div>
+        <div class="grid g3">
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-send"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">私信主动获客</b><div style="font-size:11px;color:var(--text-3)">抖音 / 快手 / 小红书</div></div>
+              <span class="tag amber">待开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">按关键词圈选目标账号，批量私信触达，意向回复自动转加微。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请开通</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)"><svg class="icon"><use href="#i-search"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">搜索关键词获客</b><div style="font-size:11px;color:var(--text-3)">平台搜索词监控</div></div>
+              <span class="tag amber">待开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">监控行业搜索词热度与竞品卡位，自动产出选题与截流内容。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请开通</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-users"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">达人合作获客</b><div style="font-size:11px;color:var(--text-3)">达人库 · 寄样 · 分佣</div></div>
+              <span class="tag" style="background:var(--violet-soft);color:var(--violet)">内测</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">按行业与粉丝画像匹配达人，寄样、脚本、分佣结算一站式管理。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请内测</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--green-soft);color:var(--green)"><svg class="icon"><use href="#i-trend"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">老客裂变获客</b><div style="font-size:11px;color:var(--text-3)">分享海报 · 活码 · 奖励</div></div>
+              <span class="tag amber">待开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">老客一键生成专属海报与活码，新客扫码自动归属推荐人并发放奖励。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请开通</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--amber-soft);color:var(--amber)"><svg class="icon"><use href="#i-headset"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">社群群聊获客</b><div style="font-size:11px;color:var(--text-3)">行业群 · 群成员画像</div></div>
+              <span class="tag amber">待开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">行业群内容运营 + 群成员画像识别，把公域群聊沉淀为私域客户。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请开通</button>
+          </div>
+          <div class="card" style="padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+              <div style="width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-flag"/></svg></div>
+              <div style="flex:1;min-width:0"><b style="font-size:13.5px">线下扫码获客</b><div style="font-size:11px;color:var(--text-3)">门店 · 展会 · 物料</div></div>
+              <span class="tag amber">待开通</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-2);line-height:1.65;margin-bottom:12px">门店与展会活码，扫码即建档、自动打标签，线下流量不再流失。</p>
+            <button class="btn sm" style="width:100%;justify-content:center">申请开通</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           视图 5：AI智能剪辑（DeepWork智伴）
+           ========================================================== -->
+      <section class="view" id="v-matrix">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;color:var(--text-3)">
+          <span class="tag violet">DeepWork智伴</span>
+          <span>AI智能剪辑工作区 · 一条流水线跑完两个环节：剪辑成片 → 批量分发</span>
+        </div>
+        <div class="mat-tabs">
+            <div class="mat-tab active" data-mp="mp-cut">
+            <div class="mt-ico" style="background:var(--violet-soft);color:var(--violet)"><svg class="icon"><use href="#i-scissors"/></svg></div>
+            <span class="mt-num">7 步流水线</span>
+            <b>智能剪辑</b>
+            <p>学习对标 → 文案 → 配音 → 生成 → 网感 → 封面 → 发布</p>
+          </div>
+          <div class="mat-tab" data-mp="mp-pub">
+            <div class="mt-ico" style="background:var(--primary-soft);color:var(--primary)"><svg class="icon"><use href="#i-send"/></svg></div>
+            <span class="mt-num">今日 46 条</span>
+            <b>批量发布</b>
+            <p>一键分发抖音/快手/小红书/视频号 · 定时排期</p>
+          </div>
+        </div>
+
+        <!-- 智能剪辑 -->
+        <div class="mat-pane active" id="mp-cut">
+
+          <!-- ① 7 步剪辑工作流（左：步骤 / 中：配置 / 右：预览 + 素材池） -->
+          <div class="card" id="mxFlowCard">
+            <div class="card-head">
+              <h3>智能剪辑工作流</h3>
+              <span class="sub">标准 7 步流水线 · 左选步骤 · 中间调参 · 右侧即时预览</span>
+              <div class="right">
+                <button class="btn sm ghost" id="mxBtnReset" data-use="mx" type="button">恢复默认</button>
+                <button class="btn primary" id="mxBtnCut" data-use="mx" type="button"><svg class="icon"><use href="#i-play"/></svg>一键跑完 7 步</button>
+              </div>
+            </div>
+            <div class="card-body" style="padding:14px 18px 16px">
+              <div class="wf-shell">
+
+                <!-- 左列：步骤导航 -->
+                <aside class="wf-rail" id="mxFlow"></aside>
+
+                <!-- 中列：当前步骤配置 + 素材池 -->
+                <section class="wf-stage">
+                  <div id="mxFlowPanel"></div>
+
+                  <div class="wf-pool">
+                    <div class="wf-pool-head">
+                      <b>素材池</b>
+                      <span class="hint" id="matHint">共 0 条</span>
+                      <span class="sp"></span>
+                      <span class="mx-chip" id="mxPickChip">已选 0 / 0</span>
+                      <button class="btn sm ghost" id="mxBtnUpload" data-use="mx" type="button"><svg class="icon"><use href="#i-image"/></svg>上传</button>
+                      <button class="btn sm ghost" data-use="mx" data-mx="all" type="button">全选</button>
+                      <button class="btn sm ghost" data-use="mx" data-mx="none" type="button">取消</button>
+                      <button class="btn sm ghost" data-use="mx" data-mx="del" type="button">删除</button>
+                    </div>
+                    <div class="material-grid wf-pool-grid" id="matGrid"></div>
+                    <div class="wf-pool-tip">建议 3–6 条素材 · 单条 ≥3 秒 · 图片按运镜合成竖版 · 视频自动切片去重</div>
+                  </div>
+
+                  <div class="wf-run">
+                    <button class="btn primary" id="mxBtnRun" data-use="mx" type="button">
+                      <svg class="icon"><use href="#i-play"/></svg><span id="wfRunLabel">按当前配置开始</span>
+                    </button>
+                  </div>
+                </section>
+
+                <!-- 右列：成片预览 + 配置摘要 -->
+                <aside class="wf-side">
+                  <div class="wf-prev">
+                    <div class="wf-prev-head">
+                      <b id="wfPrevTitle">成片预览</b>
+                      <span class="mx-chip" id="wfPrevRatio">9:16</span>
+                    </div>
+                    <div class="wf-prev-stage"><div class="wf-prev-frame" id="wfPrevFrame"></div></div>
+                    <div class="wf-prev-meta" id="wfPrevMeta"></div>
+                  </div>
+                  <div class="wf-sum" id="wfSum"></div>
+                </aside>
+
+              </div>
+
+              <!-- 底部：上一步 / 进度 / 下一步 -->
+              <div class="wf-bar">
+                <button class="btn sm ghost" id="wfPrevBtn" type="button">← 上一步</button>
+                <div class="wf-bar-mid">
+                  <div class="wf-bar-line"><i id="wfProg"></i></div>
+                  <div class="wf-note" id="mxFlowNote"></div>
+                </div>
+                <button class="btn sm ghost" id="wfNextBtn" type="button">下一步 →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② 成片结果 -->
+          <div class="card" id="mxOutCard" style="margin-top:16px">
+            <div class="card-head">
+              <h3>成片结果</h3>
+              <div class="right" id="mxOutTools"></div>
+            </div>
+            <div class="card-body" style="padding:16px">
+              <div class="mx-out-grid" id="mxOutGrid"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 批量发布 -->
+        <div class="mat-pane" id="mp-pub">
+          <div class="grid g-1-2">
+            <div class="card">
+              <div class="card-head"><h3>发布账号矩阵</h3><div class="right"><button class="btn sm"><svg class="icon"><use href="#i-plus"/></svg>绑定</button></div></div>
+              <div class="card-body" style="padding:6px 18px 14px">
+                <div class="acct-row">
+                  <span class="pf dy">抖</span>
+                  <div style="flex:1"><b style="font-size:12.8px">星野流量研究所</b>
+                    <div style="font-size:11px;color:var(--text-3)">抖音 · 粉丝 3.2万 · 今日已发 4 条</div></div>
+                  <span class="tag green">正常</span>
+                </div>
+                <div class="acct-row">
+                  <span class="pf ks">快</span>
+                  <div style="flex:1"><b style="font-size:12.8px">星野投流笔记</b>
+                    <div style="font-size:11px;color:var(--text-3)">快手 · 粉丝 1.8万 · 今日已发 3 条</div></div>
+                  <span class="tag green">正常</span>
+                </div>
+                <div class="acct-row">
+                  <span class="pf xhs">红</span>
+                  <div style="flex:1"><b style="font-size:12.8px">增长实验室</b>
+                    <div style="font-size:11px;color:var(--text-3)">小红书 · 粉丝 8,600 · 今日已发 2 条</div></div>
+                  <span class="tag green">正常</span>
+                </div>
+                <div class="acct-row">
+                  <span class="pf sph">视</span>
+                  <div style="flex:1"><b style="font-size:12.8px">流量增长局</b>
+                    <div style="font-size:11px;color:var(--text-3)">视频号 · 粉丝 5,400 · 今日已发 2 条</div></div>
+                  <span class="tag amber">需实名</span>
+                </div>
+                <div class="acct-row">
+                  <span class="pf dy">抖</span>
+                  <div style="flex:1"><b style="font-size:12.8px">本地生活代运营日记</b>
+                    <div style="font-size:11px;color:var(--text-3)">抖音 · 粉丝 1.1万 · 今日已发 3 条</div></div>
+                  <span class="tag green">正常</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <h3>本周发布排期</h3>
+                <div class="right">
+                  <span class="mx-chip" id="mxSchedStat">本周共 0 条排期</span>
+                  <button class="btn sm">自动推荐时段</button>
+                  <button class="btn sm primary"><svg class="icon"><use href="#i-plus"/></svg>新建排期</button>
+                </div>
+              </div>
+              <div class="card-body" style="padding:16px">
+                <div class="schedule" id="mxSchedule">
+                  <div class="sch-day">
+                    <div class="d">周一</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>09:30</em></div>
+                      <div class="sch-chip" style="background:var(--xhs)">红<em>20:00</em></div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d">周二</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--kuaishou)">快<em>12:00</em></div>
+                      <div class="sch-chip" style="background:var(--sph)">视<em>19:00</em></div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d">周三</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>09:30</em></div>
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>18:30</em></div>
+                      <div class="sch-more">+1 条</div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d">周四</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--xhs)">红<em>21:00</em></div>
+                      <div class="sch-chip" style="background:var(--kuaishou)">快<em>12:00</em></div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d">周五</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>10:00</em></div>
+                      <div class="sch-chip" style="background:var(--sph)">视<em>20:00</em></div>
+                      <div class="sch-more">+2 条</div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d">周六</div>
+                    <div class="sch-slot">
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>11:00</em></div>
+                      <div class="sch-chip" style="background:var(--xhs)">红<em>20:30</em></div>
+                    </div>
+                  </div>
+                  <div class="sch-day">
+                    <div class="d today">周日 · 今天</div>
+                    <div class="sch-slot" style="border-color:var(--primary-2);background:var(--primary-soft)">
+                      <div class="sch-chip" style="background:var(--douyin)">抖<em>已发</em></div>
+                      <div class="sch-chip" style="background:var(--kuaishou)">快<em>18:00</em></div>
+                      <div class="sch-chip" style="background:var(--xhs)">红<em>20:30</em></div>
+                      <div class="sch-more">+1 条待发</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid g4" style="margin-top:18px">
+                  <div class="kpi" style="box-shadow:none;background:var(--panel-2)">
+                    <div class="k-label">本周已发布</div>
+                    <div class="k-val" style="font-size:22px">46<small class="unit">条</small></div>
+                  </div>
+                  <div class="kpi" style="box-shadow:none;background:var(--panel-2)">
+                    <div class="k-label">总播放量</div>
+                    <div class="k-val" style="font-size:22px">182<small class="unit">万</small></div>
+                  </div>
+                  <div class="kpi" style="box-shadow:none;background:var(--panel-2)">
+                    <div class="k-label">评论区留言</div>
+                    <div class="k-val" style="font-size:22px">6,420</div>
+                  </div>
+                  <div class="kpi" style="box-shadow:none;background:var(--panel-2)">
+                    <div class="k-label">引流加微</div>
+                    <div class="k-val" style="font-size:22px">312<small class="unit">人</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </section>
+
+      <!-- ==========================================================
+           视图 6：AI 智能员工（经营支撑）
+           ========================================================== -->
+      <section class="view" id="v-employee">
+        <div class="alert info" style="margin-bottom:18px">
+          <svg class="icon"><use href="#i-robot"/></svg>
+          <div>
+            <b>5 位 AI 员工已上岗，24 小时接管微信与店铺客服</b>
+            每位员工可独立绑定微信、独立配置话术与权限。所有自动回复均保留完整会话记录，可随时人工接管。
+          </div>
+        </div>
+
+        <div class="section-title"><h2>AI 员工团队</h2><span class="hint">点击卡片配置能力与话术</span><div class="line"></div></div>
+
+        <div class="emp-grid">
+          <div class="emp e2">
+            <div class="emp-top">
+              <div class="emp-av" style="background:var(--accent-soft)">💬</div>
+              <div><b>销售 AI 员工</b><div class="st" style="color:var(--green)"><span class="dot-live pulse"></span>运行中</div></div>
+            </div>
+            <div class="emp-desc">微信 1v1 跟进，自动发案例报价、答疑、逼单、催付款，跟进节奏自动提醒。</div>
+            <div class="emp-metrics">
+              <div><b style="color:var(--accent)">312</b><span>加微</span></div>
+              <div><b>86</b><span>报价单</span></div>
+              <div><b>18.2%</b><span>成交率</span></div>
+            </div>
+            <div class="emp-foot"><button class="btn sm" style="flex:1;justify-content:center">配置</button>
+              <button class="btn sm primary" style="flex:1;justify-content:center">查看会话</button></div>
+          </div>
+
+          <div class="emp e3">
+            <div class="emp-top">
+              <div class="emp-av" style="background:var(--green-soft)">🎧</div>
+              <div><b>客服 AI 员工</b><div class="st" style="color:var(--green)"><span class="dot-live pulse"></span>运行中</div></div>
+            </div>
+            <div class="emp-desc">接管拼多多 / 抖音 / 快手 / 视频号店铺客服，自动答疑、催付、售后，投诉自动转人工。</div>
+            <div class="emp-metrics">
+              <div><b style="color:var(--green)">1,551</b><span>已应答</span></div>
+              <div><b>1.2s</b><span>首响</span></div>
+              <div><b>98%</b><span>好评率</span></div>
+            </div>
+            <div class="emp-foot"><button class="btn sm" style="flex:1;justify-content:center">知识库</button>
+              <button class="btn sm primary" style="flex:1;justify-content:center">渠道设置</button></div>
+          </div>
+
+          <div class="emp e4">
+            <div class="emp-top">
+              <div class="emp-av" style="background:var(--violet-soft)">📣</div>
+              <div><b>运营 AI 员工</b><div class="st" style="color:var(--green)"><span class="dot-live pulse"></span>运行中</div></div>
+            </div>
+            <div class="emp-desc">自动剪辑成片、批量分发 4 平台、监控数据表现并自动优化标题与发布时间。</div>
+            <div class="emp-metrics">
+              <div><b style="color:var(--violet)">46</b><span>发布视频</span></div>
+              <div><b>182万</b><span>播放</span></div>
+              <div><b>3</b><span>剪辑任务</span></div>
+            </div>
+            <div class="emp-foot"><button class="btn sm" style="flex:1;justify-content:center">任务队列</button>
+              <button class="btn sm primary" style="flex:1;justify-content:center">数据看板</button></div>
+          </div>
+
+          <div class="emp e5">
+            <div class="emp-top">
+              <div class="emp-av" style="background:var(--amber-soft)">📊</div>
+              <div><b>财务统计 AI 员工</b><div class="st" style="color:var(--green)"><span class="dot-live pulse"></span>运行中</div></div>
+            </div>
+            <div class="emp-desc">自动归集各平台订单与微信收款，核算成本、运费、利润，生成日报/月报。</div>
+            <div class="emp-metrics">
+              <div><b style="color:var(--amber)">86.4k</b><span>今日流水</span></div>
+              <div><b>31.6%</b><span>毛利率</span></div>
+              <div><b>0</b><span>待核对</span></div>
+            </div>
+            <div class="emp-foot"><button class="btn sm" style="flex:1;justify-content:center">报表</button>
+              <button class="btn sm primary" style="flex:1;justify-content:center">对账明细</button></div>
+          </div>
+
+          <div class="emp e6">
+            <div class="emp-top">
+              <div class="emp-av" style="background:#E4F5F7">📦</div>
+              <div><b>交付统计 AI 员工</b><div class="st" style="color:var(--amber)"><span class="dot-live"></span>3 项待处理</div></div>
+            </div>
+            <div class="emp-desc">实时核对线索交付量、账户消耗与回款，交付缺口预警，自动生成补量建议。</div>
+            <div class="emp-metrics">
+              <div><b style="color:#0E9AA7">186</b><span>在投账户</span></div>
+              <div><b>12</b><span>今日交付</span></div>
+              <div><b style="color:var(--amber)">3</b><span>待补量</span></div>
+            </div>
+            <div class="emp-foot"><button class="btn sm" style="flex:1;justify-content:center">交付台账</button>
+              <button class="btn sm primary" style="flex:1;justify-content:center">交付预警</button></div>
+          </div>
+        </div>
+
+        <div class="grid g-1-2" style="margin-top:26px">
+          <!-- 微信托管 -->
+          <div class="card">
+            <div class="card-head">
+              <h3>个人微信托管</h3>
+              <div class="right"><span class="tag green">3/10 已绑定</span></div>
+            </div>
+            <div class="card-body" style="padding:14px 18px">
+              <div id="wxPool2"></div>
+              <button class="btn" style="width:100%;justify-content:center;margin-top:6px" type="button">
+                <svg class="icon"><use href="#i-plus"/></svg>接入微信账号（企业微信 / 服务商）
+              </button>
+
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-2)">
+                <div class="set-row">
+                  <div class="s-main"><b>24 小时自动回复</b><p>非工作时间保持全自动应答</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>自动群发消息</b><p>按标签分组群发，节流防风控</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>关键客户人工接管</b><p>大额订单 / 投诉自动转人工</p></div>
+                  <div class="switch on"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <!-- 智能客服渠道 -->
+            <div class="card">
+              <div class="card-head">
+                <h3>智能客服机器人 · 全渠道</h3>
+                <div class="right"><span class="tag blue">已接入 4 个平台</span></div>
+              </div>
+              <div class="card-body" style="padding:6px 18px 14px">
+                <div class="chan-row">
+                  <span class="pf pdd">拼</span>
+                  <div style="flex:1"><b style="font-size:12.8px">拼多多店铺客服</b>
+                    <div style="font-size:11px;color:var(--text-3)">自动答疑 / 催付 / 售后 · 今日 620 条</div></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="chan-row">
+                  <span class="pf dy">抖</span>
+                  <div style="flex:1"><b style="font-size:12.8px">抖音小店 + 私信</b>
+                    <div style="font-size:11px;color:var(--text-3)">评论区互动 + 私信引导加微 · 今日 486 条</div></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="chan-row">
+                  <span class="pf ks">快</span>
+                  <div style="flex:1"><b style="font-size:12.8px">快手小店 + 私信</b>
+                    <div style="font-size:11px;color:var(--text-3)">自动回复 + 意向识别 · 今日 312 条</div></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="chan-row">
+                  <span class="pf sph">视</span>
+                  <div style="flex:1"><b style="font-size:12.8px">视频号私信 + 直播间</b>
+                    <div style="font-size:11px;color:var(--text-3)">弹幕答疑 + 引导关注 · 今日 133 条</div></div>
+                  <div class="switch on"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           视图 7：GEO直通车
+           ========================================================== -->
+                                    <section class="view" id="v-geo">
+        <div class="g3">
+          <aside class="g3-nav">
+            <div class="g3-nav-hd"><b>GEO 优化引擎</b><span>11 模块 · 从身份到交付</span></div>
+            <div class="g3-nav-list" id="g3Nav">
+              <button class="g3-navi active" type="button" data-g3="dash"><i style="background:#4A46E8"><svg class="icon"><use href="#i-grid"/></svg></i>仪表盘<span class="n" id="g3NvAudit" style="display:none">0</span></button>
+              <button class="g3-navi" type="button" data-g3="org"><i style="background:#2563EB"><svg class="icon"><use href="#i-shield"/></svg></i>企业身份管理</button>
+              <button class="g3-navi" type="button" data-g3="packs"><i style="background:#7C3AED"><svg class="icon"><use href="#i-layers"/></svg></i>词库 / 话题包</button>
+              <button class="g3-navi" type="button" data-g3="content"><i style="background:#DB2777"><svg class="icon"><use href="#i-spark"/></svg></i>方舟创作中心</button>
+              <button class="g3-navi" type="button" data-g3="sites"><i style="background:#0891B2"><svg class="icon"><use href="#i-globe"/></svg></i>站点矩阵</button>
+              <button class="g3-navi" type="button" data-g3="channels"><i style="background:#059669"><svg class="icon"><use href="#i-send"/></svg></i>全域渠道分发</button>
+              <button class="g3-navi" type="button" data-g3="probes"><i style="background:#0EA5E9"><svg class="icon"><use href="#i-radar"/></svg></i>探针采集监测</button>
+              <button class="g3-navi" type="button" data-g3="reports"><i style="background:#D97706"><svg class="icon"><use href="#i-doc"/></svg></i>报告中心</button>
+              <button class="g3-navi" type="button" data-g3="diag"><i style="background:#14B8A6"><svg class="icon"><use href="#i-check-circle"/></svg></i>页面诊断质检</button>
+              <button class="g3-navi" type="button" data-g3="tenants"><i style="background:#E11D48"><svg class="icon"><use href="#i-users"/></svg></i>客户 &amp; 权限</button>
+              <button class="g3-navi" type="button" data-g3="settings"><i style="background:#64748B"><svg class="icon"><use href="#i-setting"/></svg></i>系统设置</button>
+            </div>
+            <div class="g3-nav-ft" id="g3NavFoot">正在读取状态…</div>
+          </aside>
+          <div class="g3-main">
+            <div class="g3-bar">
+              <div class="g3-bar-t"><h2 id="g3Title">仪表盘</h2><span id="g3Sub">全域指标 · 分模型看板 · 任务概览</span></div>
+              <div class="g3-bar-r" id="g3Actions"></div>
+            </div>
+            <div class="g3-body" id="g3Body"></div>
+          </div>
+        </div>
+      </section>
+
+<style id="geo3-style"><!--@bundle:css/02-geo3.css--></style>
+
+
+<style id="geobuild-style"><!--@bundle:css/03-geobuild.css--></style>
+<style id="skin-bright"><!--@bundle:css/04-skin-bright.css--></style>
+<style id="refresh-style"><!--@bundle:css/05-refresh.css--></style>
+<!-- __GEOBUILD_VIEW_START__ -->
+      <!-- ==========================================================
+           视图 7-B：GEO直通车 · AI秒搭建站
+           ========================================================== -->
+      <section class="view" id="v-geobuild">
+        <div class="alert info" style="margin-bottom:16px">
+          <svg class="icon"><use href="#i-layers"/></svg>
+          <div>
+            <b>AI 秒搭建站 · 把 GEO 原则焊进网站骨架</b>
+            填 6 项信息，60 秒产出一套「AI 看得懂、愿意引用」的官网：语义化多页站点 + JSON-LD 结构化数据 + FAQ 问答层 +
+            <code>llms.txt</code> / <code>robots.txt</code> / <code>sitemap.xml</code>，整站可打包交付。发布后核心词自动接入
+            「GEO优化引擎」持续监测排名。
+          </div>
+        </div>
+
+        <div class="geo-tools" id="gbTools"></div>
+
+        <div class="gb-wrap">
+          <div class="card">
+            <div class="card-head">
+              <h3>建站信息</h3>
+              <div class="right"><span class="tag blue">GEO 优先模板</span></div>
+            </div>
+            <div class="card-body gb-form" id="gbForm">
+              <label class="gb-fld"><b>品牌 / 企业名称<em>*</em></b>
+                <input class="geo-inp" id="gbBrand" maxlength="30" placeholder="例如：启量增长" autocomplete="off"></label>
+              <label class="gb-fld"><b>所属行业<em>*</em></b>
+                <select class="geo-inp" id="gbIndustry">
+                  <option value="agency">流量服务商 / 代运营</option>
+                  <option value="saas">企业服务 / 软件 SaaS</option>
+                  <option value="local">本地生活门店</option>
+                  <option value="mfg">制造与供应链</option>
+                  <option value="edu">教育培训</option>
+                  <option value="health">医疗健康</option>
+                  <option value="home">家居建材</option>
+                  <option value="general">通用企业服务</option>
+                </select></label>
+              <label class="gb-fld wide"><b>主营产品 / 服务<em>*</em></b>
+                <input class="geo-inp" id="gbServices" maxlength="80" placeholder="用「、」分隔，例如：抖音代运营、千川投流代投、CPL 线索供应" autocomplete="off"></label>
+              <label class="gb-fld"><b>所在城市</b>
+                <input class="geo-inp" id="gbCity" maxlength="20" placeholder="例如：杭州" autocomplete="off"></label>
+              <label class="gb-fld"><b>联系电话</b>
+                <input class="geo-inp" id="gbPhone" maxlength="24" placeholder="400-800-1234" autocomplete="off"></label>
+              <label class="gb-fld wide"><b>核心关键词<em>*</em></b>
+                <input class="geo-inp" id="gbKeywords" maxlength="120" placeholder="客户在 AI 里真实会问的 3–5 个长句，用「、」分隔" autocomplete="off">
+                <div class="gb-hint" id="gbKwHint">关键词决定 H1、FAQ 与 JSON-LD 的语义主题，建议首选「XX 哪家好」这类高意图问句。</div></label>
+              <label class="gb-fld"><b>微信 / 企微</b>
+                <input class="geo-inp" id="gbWechat" maxlength="30" placeholder="微信号" autocomplete="off"></label>
+              <label class="gb-fld wide"><b>站点域名</b>
+                <input class="geo-inp" id="gbDomain" maxlength="60" placeholder="www.example.com" autocomplete="off">
+                <div class="gb-probe" id="gbProbe"></div>
+                <div class="gb-hint">域名会被写入 canonical / sitemap / JSON-LD。填好后自动校验 DNS 与 HTTPS 是否真的可达 —— 未解析的域名无法被任何 AI 引擎抓取。</div></label>
+              <div class="gb-fld wide"><b>目标 AI 引擎</b>
+                <div class="gb-chips" id="gbEngines"></div>
+                <div class="gb-hint">勾选后，建站完成可一键把这些关键词写入对应引擎的监测任务。</div></div>
+            </div>
+            <div class="gb-actions">
+              <button class="btn primary" id="gbBtnBuild" type="button"><svg class="icon"><use href="#i-spark"/></svg>一键秒搭建站</button>
+              <button class="btn ghost" id="gbBtnReset" type="button"><svg class="icon"><use href="#i-refresh"/></svg>重置示例</button>
+              <span class="gb-hint" id="gbFormHint">示例数据已填好，可直接改成你的信息</span>
+            </div>
+
+            <!-- 生成成果 + 进度（融合在建站信息底部；进度默认折叠） -->
+            <div class="gb-merged" id="gbMerged">
+              <div class="gbm-head">
+                <div class="gbm-t"><b>生成成果</b><span class="geo-chip" id="gbStepTag">待生成</span></div>
+                <button class="gbm-fold" id="gbProgFold" type="button" aria-expanded="false">
+                  <svg class="icon"><use href="#i-chevron"/></svg><span id="gbFoldTxt">生成进度</span>
+                </button>
+              </div>
+              <div class="gb-metrics" id="gbMetrics"></div>
+              <div class="gbm-prog" id="gbProg">
+                <div class="gbm-prog-in">
+                  <div class="bar-track"><div class="bar-fill" id="gbBar" style="width:0%;background:var(--primary)"></div></div>
+                  <div class="gb-steps" id="gbSteps"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-head"><h3>GEO 五原则核对</h3><div class="right" id="gbCheckTag"></div></div>
+              <div class="card-body" style="padding:6px 18px 14px" id="gbCheck"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="gbResult" style="display:none">
+          <!-- 发布状态：把「已生成源码」和「已上线」明确区分开 -->
+          <div class="card" style="margin-top:16px;padding:0;overflow:hidden">
+            <div class="card-head"><h3>发布状态</h3>
+              <span class="sub">源码体检分评估的是文件质量，不代表已上线</span></div>
+            <div class="card-body" style="padding:0">
+              <div class="gb-pub" id="gbPub" style="margin:0;border-radius:0;border-left:0;border-right:0;border-bottom:0"></div>
+            </div>
+          </div>
+
+          <div class="gb-wrap" style="margin-top:16px">
+            <div class="card" style="overflow:hidden">
+              <div class="gb-prev-tools">
+                <div id="gbTabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+                <span class="gb-url" id="gbUrl"></span>
+              </div>
+              <iframe class="gb-frame" id="gbFrame" sandbox="allow-scripts allow-popups" title="站点预览"></iframe>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="card">
+                <div class="card-head"><h3>产物清单</h3><div class="right" id="gbFileTag"></div></div>
+                <div class="card-body" style="padding:4px 18px 12px" id="gbFiles"></div>
+                <div class="gb-dl" id="gbDl" style="padding:0 18px 16px"></div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h3>GEO 体检得分</h3><div class="right" id="gbScoreTag"></div></div>
+                <div class="card-body" style="padding:8px 18px 14px" id="gbScore"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="card-head"><h3>建站记录</h3><div class="right" id="gbHisTag"></div></div>
+          <div class="card-body" style="padding:6px 18px 14px" id="gbHistory"></div>
+        </div>
+      </section>
+<!-- __GEOBUILD_VIEW_END__ -->
+
+      <!-- ==========================================================
+           视图 8：AI自动直播
+           ========================================================== -->
+      <section class="view" id="v-live">
+        <div class="section-title">
+          <h2>AI数字人工作台</h2>
+          <span class="hint">形象克隆 · 声音复刻 · 文本/音频/运镜三种驱动 · 覆盖录播、直播、对话</span>
+          <div class="line"></div>
+          <button class="btn" id="dhRefresh"><svg class="icon"><use href="#i-refresh"/></svg>刷新</button>
+          <button class="btn primary" id="dhNewBtn"><svg class="icon"><use href="#i-plus"/></svg>新建数字人</button>
+        </div>
+
+        <div class="cc-bar" style="margin-bottom:14px">
+          <div class="cc-bar-main">
+            <span class="cc-dot" id="dhDot"></span>
+            <div class="cc-bar-txt"><b id="dhStateText">加载中…</b><span id="dhStateSub"></span></div>
+          </div>
+          <div class="cc-kpis">
+            <div class="cc-kpi"><b id="dhKpiAvatars">0</b><span>数字人</span></div>
+            <div class="cc-kpi"><b id="dhKpiRenders">0</b><span>成片</span></div>
+            <div class="cc-kpi"><b id="dhKpiSeconds">0s</b><span>累计时长</span></div>
+            <div class="cc-kpi"><b id="dhKpiSessions">0</b><span>进行中会话</span></div>
+          </div>
+          <div class="cc-bar-acts">
+            <button class="btn sm" id="dhIdleBtn">生成待机片</button>
+          </div>
+        </div>
+
+        <div class="cc-grid">
+          <!-- 左：数字人库 -->
+          <div class="cc-panel cc-left">
+            <div class="cc-ph"><b>数字人库</b><span class="cc-ph-sub" id="dhAvCount"></span></div>
+            <div class="dh-avs" id="dhAvatars"><div class="cc-empty">还没有数字人<br><b>点右上「新建数字人」开始</b></div></div>
+            <div class="cc-form" id="dhForm" style="display:none">
+              <div class="cc-frow"><input id="dhFormName" maxlength="24" placeholder="名字，如：主播小织"></div>
+              <div class="cc-frow">
+                <select id="dhFormRatio">
+                  <option value="9:16">竖屏 9:16</option>
+                  <option value="16:9">横屏 16:9</option>
+                  <option value="1:1">方形 1:1</option>
+                  <option value="4:5">4:5</option>
+                </select>
+                <button class="btn sm primary" id="dhFormOk">创建</button>
+              </div>
+              <div class="cc-fhint" id="dhFormErr"></div>
+            </div>
+          </div>
+
+          <!-- 中：形象 / 声音 / 驱动 -->
+          <div class="cc-panel cc-mid">
+            <div class="cc-ph"><b id="dhCurName">未选择数字人</b><span class="cc-ph-sub" id="dhCurMeta"></span></div>
+            <div id="dhEmpty" class="cc-empty">先在左侧选择或创建一个数字人</div>
+            <div id="dhWorkspace" style="display:none">
+              <div class="grid g-2-1" style="margin-bottom:14px">
+                <div class="dh-card">
+                  <div class="dh-card-img" id="dhBaseImg">形象帧<br>未生成</div>
+                  <div class="dh-card-main">
+                    <b style="font-size:13px">形象克隆</b>
+                    <p style="font-size:11px;color:var(--text-3);margin:4px 0 0;line-height:1.7">上传 1~10 张照片（短边 ≥320px），自动选主图并合成带模糊背景的基准形象帧；不裁头、不留黑边。</p>
+                    <div class="dh-frow">
+                      <input type="file" id="dhPhotoInput" accept="image/*" multiple style="display:none">
+                      <button class="btn sm" id="dhPhotoBtn">上传照片</button>
+                      <span class="cc-ph-sub" id="dhPhotoMeta"></span>
+                    </div>
+                    <div class="dh-metrics" id="dhImgMetrics"></div>
+                  </div>
+                </div>
+                <div class="dh-card">
+                  <div class="dh-card-main">
+                    <b style="font-size:13px">声音复刻</b>
+                    <p style="font-size:11px;color:var(--text-3);margin:4px 0 0;line-height:1.7">上传 10~30 秒清晰说话录音。系统测出基频/语速等客观量，从本机语音包里选最接近的底嗓，合成时闭环变调对齐。</p>
+                    <div class="dh-frow">
+                      <input type="file" id="dhVoiceInput" accept="audio/*" style="display:none">
+                      <button class="btn sm" id="dhVoiceBtn">上传语音样本</button>
+                      <span class="cc-ph-sub" id="dhVoiceMeta"></span>
+                    </div>
+                    <div class="dh-metrics" id="dhVoiceMetrics"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cc-ph"><b>驱动渲染</b><span class="cc-ph-sub">文本 → 克隆声音+字幕成片 · 音频 → 同画面成片 · 运镜 → 展示片</span></div>
+              <div class="dh-stage">
+                <div class="dh-tabs" id="dhTabs">
+                  <button class="dh-tab on" data-mode="text">文本驱动</button>
+                  <button class="dh-tab" data-mode="audio">音频驱动</button>
+                  <button class="dh-tab" data-mode="motion">运镜驱动</button>
+                </div>
+                <div id="dhPaneText">
+                  <textarea id="dhText" maxlength="2000" placeholder="输入要数字人说的话，支持多句。逐句合成克隆语音并自动烧字幕。"></textarea>
+                  <div class="dh-frow"><span class="cc-ph-sub">语速</span>
+                    <select id="dhRate"><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.1">1.1×</option><option value="1.2">1.2×</option></select>
+                    <button class="btn sm primary" id="dhGoText" style="margin-left:auto">渲染成片</button>
+                  </div>
+                </div>
+                <div id="dhPaneAudio" style="display:none">
+                  <div class="dh-frow"><input type="file" id="dhAudioInput" accept="audio/*" style="display:none"><button class="btn sm" id="dhAudioBtn">选择音频</button><span class="cc-ph-sub" id="dhAudioMeta">未选择</span>
+                    <button class="btn sm primary" id="dhGoAudio" style="margin-left:auto">渲染成片</button></div>
+                  <div class="cc-fhint" id="dhAudioErr"></div>
+                </div>
+                <div id="dhPaneMotion" style="display:none">
+                  <div class="dh-frow"><span class="cc-ph-sub">运镜</span>
+                    <select id="dhMotion"><option value="breathe">呼吸（往复）</option><option value="push">推近</option><option value="pull">拉远</option><option value="pan">横移</option></select>
+                    <span class="cc-ph-sub">时长</span><input type="number" id="dhSeconds" min="2" max="120" value="8" style="width:64px"> 秒
+                    <button class="btn sm primary" id="dhGoMotion" style="margin-left:auto">渲染成片</button></div>
+                </div>
+                <div class="dh-prog" id="dhProgWrap" style="display:none"><i id="dhProg"></i></div>
+                <div class="cc-ph-sub" id="dhProgText" style="margin-top:5px"></div>
+              </div>
+
+              <div style="margin-top:12px" id="dhPreviewWrap">
+                <div class="cc-ph"><b>预览</b><span class="cc-ph-sub" id="dhPreviewMeta">待机片 / 选中的成片</span></div>
+                <video class="dh-player" id="dhPlayer" controls playsinline></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右：产出台账 + 开播 -->
+          <div class="cc-panel cc-right">
+            <div class="cc-ph"><b>产出台账</b><span class="cc-ph-sub" id="dhOutMeta"></span></div>
+            <div class="dh-out" id="dhRenders"><div class="cc-empty">还没有成片</div></div>
+
+            <div class="cc-ph" style="margin-top:16px"><b>直播 / 对话</b><span class="cc-ph-sub" id="dhSessMeta"></span></div>
+            <div class="dh-frow" style="margin:0 0 8px">
+              <button class="btn sm" id="dhSessLive">开直播会话</button>
+              <button class="btn sm" id="dhSessDialog">开对话会话</button>
+              <button class="btn sm ghost" id="dhSessStop" style="display:none">结束</button>
+            </div>
+            <div class="cc-ph-sub" id="dhSessState"></div>
+            <div class="dh-turns" id="dhTurns"></div>
+            <div class="dh-frow" style="margin-top:8px">
+              <input id="dhSay" maxlength="300" placeholder="对数字人说话（回车发送）" style="flex:1;min-width:0;font-size:12px;padding:7px 9px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);font-family:inherit">
+              <button class="btn sm primary" id="dhSayGo">发送</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           视图 9：客户管理 CRM（经营支撑）
+           ========================================================== -->
+      <section class="view" id="v-crm">
+        <div class="grid g4" style="margin-bottom:20px" id="crmKpis">
+          <div class="kpi">
+            <div class="k-label">客户总数</div>
+            <div class="k-val" data-k="total">—</div>
+            <div class="k-foot"><span class="trend up" data-k="today">—</span><span class="vs">今日新增</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-label">已成交</div>
+            <div class="k-val" data-k="deal">—</div>
+            <div class="k-foot"><span class="trend flat" data-k="dealRate">—</span><span class="vs">成交率</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-label">成交金额</div>
+            <div class="k-val" data-k="amount">—</div>
+            <div class="k-foot"><span class="trend flat">—</span><span class="vs">已录入金额合计</span></div>
+          </div>
+          <div class="kpi">
+            <div class="k-label">平均客单价</div>
+            <div class="k-val" data-k="avg">—</div>
+            <div class="k-foot"><span class="trend flat">—</span><span class="vs">成交单均价</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>客户跟进看板</h2>
+          <span class="hint">拖拽卡片即可变更阶段</span>
+          <div class="line"></div>
+          <button class="btn"><svg class="icon"><use href="#i-filter"/></svg>筛选</button>
+          <button class="btn"><svg class="icon"><use href="#i-doc"/></svg>导出 Excel</button>
+        </div>
+
+        <div class="kanban" id="kanbanRoot" style="margin-bottom:24px">
+          <div class="col">
+            <div class="col-head"><i style="background:#8E8DA5"></i>新线索<span class="cnt">128</span></div>
+            <div class="kcard">
+              <b>周姐 · 连锁美甲</b>
+              <div class="kline"><span class="pf dy">抖</span>抖音评论 · 25 分钟前</div>
+              <div class="kfoot"><span class="tag amber">意向 71</span></div>
+            </div>
+            <div class="kcard">
+              <b>郑先生 · 电商卖家</b>
+              <div class="kline"><span class="pf xhs">红</span>小红书 · 1 小时前</div>
+              <div class="kfoot"><span class="tag amber">意向 68</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-head"><i style="background:#4C3FE4"></i>已私信<span class="cnt">64</span></div>
+            <div class="kcard">
+              <b>李总 · 连锁餐饮</b>
+              <div class="kline"><span class="pf ks">快</span>已发 2 条 · 待回复</div>
+              <div class="kfoot"><span class="tag green">意向 96</span></div>
+            </div>
+            <div class="kcard">
+              <b>许女士 · 网店店主</b>
+              <div class="kline"><span class="pf dy">抖</span>已发 1 条 · 已读</div>
+              <div class="kfoot"><span class="tag amber">意向 74</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-head"><i style="background:#12a150"></i>已加微<span class="cnt">312</span></div>
+            <div class="kcard">
+              <b>张姐美业连锁</b>
+              <div class="kline"><span class="pf dy">抖</span>备注：团购代运营</div>
+              <div class="kfoot"><span class="tag green">意向 92</span><span class="tag">跟进 2</span></div>
+            </div>
+            <div class="kcard">
+              <b>赵老板 · 家居卖场</b>
+              <div class="kline"><span class="pf sph">视</span>备注：长期供货</div>
+              <div class="kfoot"><span class="tag green">意向 89</span><span class="tag">跟进 1</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-head"><i style="background:#F5A524"></i>洽谈中<span class="cnt">96</span></div>
+            <div class="kcard">
+              <b>陈小姐 · 新消费品牌</b>
+              <div class="kline"><span class="pf xhs">红</span>已报价 · 等打样确认</div>
+              <div class="kfoot"><span class="tag accent">预计 ¥12,000</span></div>
+            </div>
+            <div class="kcard">
+              <b>泰和教培机构</b>
+              <div class="kline"><span class="pf dy">抖</span>等方案中 · 3 天未回</div>
+              <div class="kfoot"><span class="tag accent">预计 ¥28,000</span><span class="tag red">需催</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-head"><i style="background:#8B5CF6"></i>已成交<span class="cnt">86</span></div>
+            <div class="kcard">
+              <b>引力投放 · 复购</b>
+              <div class="kline"><span class="pf ks">快</span>年框 46,000 · 已回款</div>
+              <div class="kfoot"><span class="tag violet">¥46,000</span></div>
+            </div>
+            <div class="kcard">
+              <b>美好生活馆</b>
+              <div class="kline"><span class="pf dy">抖</span>首单 · 待交付</div>
+              <div class="kfoot"><span class="tag violet">¥8,600</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-head"><i style="background:#e5484d"></i>待唤醒<span class="cnt">42</span></div>
+            <div class="kcard">
+              <b>刘女士 · 口腔门诊</b>
+              <div class="kline"><span class="pf sph">视</span>7 天未互动</div>
+              <div class="kfoot"><span class="tag red">建议回访</span></div>
+            </div>
+            <div class="kcard">
+              <b>吴先生 · 招商加盟</b>
+              <div class="kline"><span class="pf dy">抖</span>15 天未互动</div>
+              <div class="kfoot"><span class="tag red">建议回访</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title"><h2>客户明细</h2><div class="line"></div></div>
+        <div class="card">
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead>
+                <tr><th>客户 / 微信备注</th><th>来源</th><th>需求</th><th>意向分</th><th>阶段</th><th>操作</th></tr>
+              </thead>
+              <tbody id="crmRows">
+                <tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:28px">正在读取线索数据…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================
+           视图 10：风控与设置
+           ========================================================== -->
+      <section class="view" id="v-settings">
+        <div class="alert warn" style="margin-bottom:18px">
+          <svg class="icon"><use href="#i-warning"/></svg>
+          <div>
+            <b>重要：自动化功能必须配合合规风控使用</b>
+            平台对「自动私信、批量加好友、自动群发、无人直播」均有明确规则限制。请务必：
+            ① 控制频率与总量，模拟真人节奏；② 只触达公开表达采购意向的用户；③ 保留退订与人工接管入口；
+            ④ 不采集、不传播未成年人信息；⑤ 涉及个人信息的处理需符合《个人信息保护法》。
+            建议以「AI 辅助 + 人工确认」为默认模式，降低账号与法律风险。
+          </div>
+        </div>
+
+        <!-- 邀请码是“决定谁能进门”的权限：只让所有者看到和修改，普通成员打开会提示无权限。 -->
+        <div class="card" id="authCodeCard" style="margin-bottom:16px">
+          <div class="card-head">
+            <h3>邀请码与自助注册</h3>
+            <div class="right"><span class="tag" id="acModeTag">读取中…</span></div>
+          </div>
+          <div class="card-body" style="padding:6px 18px 16px">
+            <div class="set-row">
+              <div class="s-main">
+                <b>允许新成员凭邀请码注册</b>
+                <p>关闭后只能由你手动开通账号；开启后登录页才会出现「注册」入口。</p>
+              </div>
+              <div class="switch" id="acToggle" role="switch" aria-checked="false" tabindex="0" title="开启/关闭自助注册"></div>
+            </div>
+            <div id="acCodeRow" style="display:none;padding:4px 0 6px">
+              <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+                <div style="flex:1;min-width:220px">
+                  <label class="hint" for="acCode" style="display:block;margin-bottom:5px">邀请码</label>
+                  <input class="inp" id="acCode" type="text" maxlength="64" autocomplete="off"
+                         placeholder="例如 TEAM-2026-XXXX"
+                         style="width:100%;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:13px;outline:0">
+                </div>
+                <button class="btn sm" id="acGen" type="button">随机生成</button>
+                <button class="btn sm" id="acCopy" type="button">复制</button>
+              </div>
+              <p class="hint" style="margin:7px 0 0">6–64 位字母、数字、下划线或短横线；保存后立即生效，无需重启服务。</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+              <button class="btn primary" id="acSave" type="button">保存设置</button>
+              <button class="btn sm" id="acCopyLink" type="button">复制注册链接</button>
+              <span class="hint" id="acMsg" style="min-height:18px"></span>
+            </div>
+            <div class="hint" id="acMeta" style="margin-top:4px"></div>
+          </div>
+        </div>
+
+        <div class="grid g-1-2">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-head"><h3>全局风控策略</h3><div class="right"><span class="tag green">安全模式已开启</span></div></div>
+              <div class="card-body" style="padding:6px 18px 14px">
+                <div class="set-row">
+                  <div class="s-main"><b>总开关：自动触达</b><p>关闭后所有 AI 仅生成建议，不自动发送</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>高意向人工复核</b><p>意向分 ≥ 90 时暂停并通知负责人</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>敏感词与违规话术拦截</b><p>内置全行业词库 + 自定义</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>夜间静默</b><p>22:00 - 08:00 不主动外发</p></div>
+                  <div class="switch on"></div>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>账号异常自动熔断</b><p>触发平台警告立即停止任务</p></div>
+                  <div class="switch on"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3>团队与权限</h3><div class="right"><button class="btn sm">邀请成员</button></div></div>
+              <div class="card-body" style="padding:6px 18px 14px">
+                <div class="acct-row">
+                  <div class="av a1">王</div>
+                  <div style="flex:1"><b style="font-size:12.8px">王总（你）</b>
+                    <div style="font-size:11px;color:var(--text-3)">超级管理员 · 全部权限</div></div>
+                  <span class="tag blue">所有者</span>
+                </div>
+                <div class="acct-row">
+                  <div class="av a3">刘</div>
+                  <div style="flex:1"><b style="font-size:12.8px">刘主管</b>
+                    <div style="font-size:11px;color:var(--text-3)">销售跟进 · 客户管理 · 不可导出</div></div>
+                  <span class="tag">销售</span>
+                </div>
+                <div class="acct-row">
+                  <div class="av a5">孙</div>
+                  <div style="flex:1"><b style="font-size:12.8px">孙客服</b>
+                    <div style="font-size:11px;color:var(--text-3)">仅客服会话与订单查询</div></div>
+                  <span class="tag">客服</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-head"><h3>企业资质与背书</h3></div>
+              <div class="card-body" style="padding:14px 18px">
+                <div class="set-row">
+                  <div class="s-main"><b>企业名称</b><p>用于 GEO 内容与 AI 搜索背书</p></div>
+                  <input class="inp" value="星野流量科技有限公司" style="border:1px solid var(--border);border-radius:9px;padding:7px 11px;font-family:inherit;font-size:12.5px;width:230px;outline:0">
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>主营类目</b><p>抖音代运营 / 千川投流 / 本地生活团购 / CPL 线索</p></div>
+                  <span class="tag blue">流量服务</span>
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>办公地址</b><p>用于本地 GEO 与同城曝光</p></div>
+                  <input class="inp" value="浙江省杭州市滨江区" style="border:1px solid var(--border);border-radius:9px;padding:7px 11px;font-family:inherit;font-size:12.5px;width:230px;outline:0">
+                </div>
+                <div class="set-row">
+                  <div class="s-main"><b>营业执照 / 平台服务商资质</b><p>提升 AI 引用权威度</p></div>
+                  <span class="tag green">已上传 3 份</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="fold-card" data-fold>
+              <div class="fold-card-head" role="button" tabindex="0" aria-expanded="false">
+                <span class="fold-t"><svg class="icon"><use href="#i-chevron"/></svg>
+                  <b>操作日志</b><span class="fold-sub">可追溯 · 最近 6 条</span></span>
+                <span class="fold-r"><button class="btn sm">导出</button></span>
+              </div>
+              <div class="fold-body">
+              <div class="tbl-wrap">
+                <table class="tbl">
+                  <thead><tr><th>时间</th><th>执行者</th><th>动作</th><th>对象</th><th>结果</th></tr></thead>
+                  <tbody>
+                    <tr><td>11:42</td><td><span class="tag blue">获客 AI</span></td><td>发送私信</td><td>李总 · 连锁餐饮</td><td><span class="tag green">成功</span></td></tr>
+                    <tr><td>11:38</td><td><span class="tag blue">客服 AI</span></td><td>店铺自动回复</td><td>拼多多订单 #8821</td><td><span class="tag green">成功</span></td></tr>
+                    <tr><td>11:35</td><td><span class="tag violet">运营 AI</span></td><td>批量发布视频</td><td>抖音 · 本地生活代运营日记</td><td><span class="tag green">成功</span></td></tr>
+                    <tr><td>11:30</td><td><span class="tag accent">销售 AI</span></td><td>发送报价单</td><td>陈小姐 · 新消费品牌</td><td><span class="tag green">成功</span></td></tr>
+                    <tr><td>11:26</td><td><span class="tag red">风控</span></td><td>拦截发送</td><td>含敏感词话术</td><td><span class="tag amber">已拦截</span></td></tr>
+                    <tr><td>11:18</td><td>王总</td><td>人工接管会话</td><td>泰和教培机构</td><td><span class="tag blue">人工中</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================================
+           视图 11：会员套餐
+           ========================================================== -->
+      <section class="view" id="v-pricing">
+        <div id="currentPlanBox"></div>
+        <div id="payQuotaBox"></div>
+
+        <div class="section-title">
+          <h2>会员套餐</h2>
+          <span class="hint">年付折算更划算 · 支持随时升级补差价</span>
+          <div class="line"></div>
+          <button class="btn"><svg class="icon"><use href="#i-phone"/></svg>联系销售</button>
+        </div>
+
+        <div id="cycleSwitch" style="display:flex;gap:8px;align-items:center;margin:-6px 0 16px"></div>
+
+        <div class="plan-grid" id="planGrid"></div>
+
+        <div class="section-title" style="margin-top:28px">
+          <h2>权益对比</h2>
+          <div class="line"></div>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap">
+            <table class="tbl" id="matrixTable">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid g2" style="margin-top:18px">
+          <div class="card">
+            <div class="card-head"><h3>计费说明</h3></div>
+            <div class="card-body" id="billingNotes"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>常见问题</h3></div>
+            <div class="card-body" id="faqBox"></div>
+          </div>
+        </div>
+
+        <div class="alert warn" style="margin-top:18px">
+          <svg class="icon"><use href="#i-warning"/></svg>
+          <div>
+            <b>友情提示</b>
+            线索额度按月重置、不结转；AI 自动触达均受平台风控参数约束，请以「AI 辅助 + 人工确认」模式使用，避免账号风险。
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script><!--@bundle:js/01-app.js--></script>
+
+<!-- ============ 二维码编码层（真实可扫，零依赖） ============ -->
+<script id="qr-layer"><!--@bundle:js/02-qr.js--></script>
+
+<!-- ============ 交互增强层 ============ -->
+<script><!--@bundle:js/03-interact.js--></script>
+
+<script id="runtime-layer"><!--@bundle:js/04-runtime.js--></script>
+
+<script><!--@bundle:js/05-collect.js--></script>
+<script><!--@bundle:js/06-avatar.js--></script>
+
+<script id="matrix-layer"><!--@bundle:js/07-matrix.js--></script>
+<script id="geo3-layer"><!--@bundle:js/08-geo3.js--></script>
+
+<script id="geosite-layer"><!--@bundle:js/09-geosite.js--></script>
+<script id="colsd-layer"><!--@bundle:js/10-colsd.js--></script>
+
+<script><!--@bundle:js/11-fold.js--></script>
+<script><!--@bundle:js/12-bootguard.js--></script>
+<script><!--@bundle:js/13-llm.js--></script>
+<script><!--@bundle:js/14-auth-settings.js--></script></body>
+</html>

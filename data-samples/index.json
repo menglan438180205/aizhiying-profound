@@ -1,0 +1,48 @@
+{
+  "_readme": "生产运行系统的数据结构样例（非演示数据）。用于导入真实数据时对齐字段、做接口联调与文档示例。演示用的模拟业务数据在 demo/dataset.js，仅在 DEMO_MODE=1 时可用。",
+  "version": "1.0.0",
+  "entities": [
+    {
+      "entity": "lead",
+      "file": "lead.json",
+      "label": "线索",
+      "module": "AI灵讯 · 评论区获客 / 客户管理 CRM"
+    },
+    {
+      "entity": "collect-task",
+      "file": "collect-task.json",
+      "label": "采集调度任务",
+      "module": "AI灵讯 · 评论区获客"
+    },
+    {
+      "entity": "geo-keyword",
+      "file": "geo-keyword.json",
+      "label": "GEO 监测关键词",
+      "module": "GEO直通车"
+    },
+    {
+      "entity": "geo-site",
+      "file": "geo-site.json",
+      "label": "GEO 建站任务",
+      "module": "GEO直通车 · AI秒搭建站"
+    },
+    {
+      "entity": "edit-job",
+      "file": "edit-job.json",
+      "label": "剪辑渲染任务",
+      "module": "DeepWork智伴 · AI智能剪辑"
+    },
+    {
+      "entity": "plan",
+      "file": "plan.json",
+      "label": "会员套餐",
+      "module": "经营支撑 · 会员套餐"
+    },
+    {
+      "entity": "order",
+      "file": "order.json",
+      "label": "订单与订阅",
+      "module": "经营支撑 · 会员套餐"
+    }
+  ]
+}

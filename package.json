@@ -1,0 +1,18 @@
+{
+  "name": "aizhiying-profound",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI智盈 ProFound · 前端 SPA（src → index.html）+ Node BFF（server/，零依赖）",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "check": "node scripts/build.js --check",
+    "start": "node start-local.js",
+    "test": "node server/test/api.test.js",
+    "test:tenant": "node server/test/tenant.test.js",
+    "tenant:backfill": "node scripts/backfill-tenant.js",
+    "routes": "node -e \"const s=require('fs').readFileSync('server/index.js','utf8');const m=s.match(/route\\((?:'(?:GET|POST|PUT|PATCH|DELETE)'|method)/g)||[];console.log('route 注册点:', m.length)\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

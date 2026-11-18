@@ -1,0 +1,23 @@
+{
+  "_sample": true,
+  "_entity": "geo-keyword",
+  "_note": "GEO直通车监测关键词结构样例。真实项目请替换为自有品牌词与行业词。",
+  "fields": {
+    "id": "string | 监测任务 ID",
+    "keyword": "string | 监测关键词",
+    "engines": "string[] | 监测引擎：doubao / yuanbao / wenxin / tongyi / deepseek / kimi",
+    "every": "15m | 1h | 6h | 24h",
+    "intent": "string | 意图分类：采购 / 定制 / 代运营 / 货源 / 品牌",
+    "vol": "number | 预估月搜索量",
+    "enabled": "boolean | 是否启用"
+  },
+  "example": {
+    "id": "geo_sample_0001",
+    "keyword": "示例品牌词 哪家好",
+    "engines": ["doubao", "yuanbao"],
+    "every": "1h",
+    "intent": "采购",
+    "vol": 1000,
+    "enabled": true
+  }
+}
