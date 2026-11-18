@@ -1,6 +1,10 @@
 # AI 智盈 ProFound
 
+[![CI](https://github.com/menglan438180205/aizhiying-profound/actions/workflows/ci.yml/badge.svg)](https://github.com/menglan438180205/aizhiying-profound/actions/workflows/ci.yml)
+
 面向企业增长的全栈工作台：AI 评论区获客、GEO 优化、AI 智能剪辑、AI 数字人、客户管理与经营分析。
+
+> GitHub 私有仓库：<https://github.com/menglan438180205/aizhiying-profound>（需要仓库所有者邀请）。
 
 - **前端**：`src/` → `scripts/build.js` → 单文件 `index.html`（无前端框架、无 npm 运行时依赖）
 - **后端**：`server/`，Node.js BFF，文件存储 `.data/`（JSON/NDJSON，无数据库）
@@ -24,7 +28,7 @@
 ## 本地启动
 
 ```bash
-git clone <仓库地址> aizhiying
+git clone https://github.com/menglan438180205/aizhiying-profound.git aizhiying
 cd aizhiying
 
 # 1. 生成本地配置（不要提交）
@@ -36,6 +40,10 @@ cp .env.local.example .env.local
 npm start
 # 或：node start-local.js
 ```
+
+> 如果本机访问 `github.com:443` 超时，可改用 GitHub 的 SSH 443 端口：
+> `git remote set-url origin ssh://git@ssh.github.com:443/menglan438180205/aizhiying-profound.git`
+> 需要先把本机 SSH 公钥添加为仓库 Deploy Key（勾选 write）或账号 SSH Key。
 
 打开 <http://127.0.0.1:8787/app/>，用 `.env.local` 里的管理员手机号和密码登录。
 

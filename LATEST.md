@@ -21,7 +21,7 @@ TEST-LATEST.cmd
 
 | 组件 | 最新版 | 位置 |
 |---|---|---|
-| 前端页面 | `index.html` · 2026-11-18 17:24 | 根目录，线上已部署同版本 |
+| 前端页面 | `index.html` · 2026-11-18 19:12 | 根目录；仓库版本已去掉真实邀请码示例 |
 | 前端源码 | `src/` | 改完执行 `node scripts/build.js` |
 | 浏览器扩展 | **1.3.8** | `tools/browser-collector` |
 | 本机桥 | `tools/mediacrawler-bridge/server.js` | 已安装开机启动 |
@@ -29,11 +29,22 @@ TEST-LATEST.cmd
 | 官网 | `web/` | `/` 官网，`/app/` 应用 |
 | 生产服务器 | Ubuntu `62.234.109.9` | `/opt/aizhiying`，`aizhiying.service` + `cloudflared.service` |
 
-当前 `index.html` SHA256：
+当前仓库 `index.html` SHA256：
 
 ```text
-D77AA2D69C7E6D3102084D35887567D9BBDECE31224691A6528DAF9A60DFD4E8
+D16DDEA9EE5369F0164FE22C0B513E9433B04D5F5976E5B88D8D56956E666C39
 ```
+
+线上生产仍是此前部署的 `D77AA2D69C7E6D3102084D35887567D9BBDECE31224691A6528DAF9A60DFD4E8`；
+差异仅为邀请码输入框示例文案，功能一致。
+
+## GitHub 团队仓库
+
+```text
+https://github.com/menglan438180205/aizhiying-profound
+```
+
+私有仓库。成员需要仓库所有者邀请；协作流程见 `CONTRIBUTING.md`。
 
 ## 后台邀请码（2026-11-18）
 
